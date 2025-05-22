@@ -1,0 +1,396 @@
+{
+	"info": {
+		"_postman_id": "a2bf1c5f-7f32-4a72-a698-f13830735c13",
+		"name": "makani-helpdesk-api",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Authentication Workflow",
+			"item": [
+				{
+					"name": "LOGIN-INTERNAL",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "8dd18529-b65e-407b-ade9-1de35373c8b8",
+								"exec": [
+									"// Ensure the request was successful (HTTP Status 200 OK)",
+									"pm.test(\"Status code is 200 OK\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"// Check if the response body is JSON",
+									"pm.test(\"Response is JSON\", function () {",
+									"    pm.response.to.be.json;",
+									"});",
+									"",
+									"// Parse the JSON response",
+									"const responseData = pm.response.json();",
+									"",
+									"// Check if the 'token' property exists in the response",
+									"pm.test(\"Response has 'token' property\", function () {",
+									"    pm.expect(responseData).to.have.property('token');",
+									"});",
+									"",
+									"// Store the token in an environment variable",
+									"if (responseData && responseData.token) {",
+									"    // Set the environment variable 'authToken'",
+									"    pm.environment.set(\"authToken\", responseData.token);",
+									"    console.log(\"Authentication Token stored: \" + responseData.token.substring(0, 20) + \"...\"); // Log a snippet",
+									"} else {",
+									"    console.error(\"Could not find 'token' in the response.\");",
+									"    pm.test(\"Token was not found in response\", false); // Fail the test if token is missing",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"id": "fe912c9b-2e56-4e6f-8bd6-fb00b5b4ee12",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"user1\",\n    \"password\": \"pass1\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:8080/helpdesk/security/login/internal"
+					},
+					"response": []
+				}
+			],
+			"id": "1d5da659-f642-4fa8-930e-90d6bd5c729a",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "c74d831a-329b-402b-bbb1-bee053d8dd0e",
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							"// --- Configuration ---",
+							"const loginRequestName = \"LOGIN-INTERNAL\"; // Name of your login request in Postman",
+							"const validateTokenRequestName = \"Get User Info\"; // Name of a simple authenticated GET request (e.g., /user/me)",
+							"",
+							"// --- Logic ---",
+							"pm.sendRequest({",
+							"    // Make sure this URL is correct for checking token validity",
+							"    url: pm.request.url.host + ':8080/helpdesk/people/employees/1', // Example: a simple GET that requires authentication",
+							"    method: 'GET',",
+							"    header: {",
+							"        'Authorization': `Bearer ${pm.environment.get(\"authToken\")}` // FIX IS HERE: Backticks for the value string",
+							"    }",
+							"}, function (err, res) {",
+							"    if (err) {",
+							"        console.error(\"Network or request error during token validation:\", err);",
+							"        // Handle network error, try re-login",
+							"        pm.sendRequest(pm.collection.getByName(loginRequestName), function(loginErr, loginRes) { // Use pm.collection.getByName",
+							"            if (loginErr) {",
+							"                console.error(\"Error during automatic login:\", loginErr);",
+							"                pm.test(\"Automatic login failed\", false);",
+							"            } else if (loginRes.code !== 200) {",
+							"                console.error(\"Automatic login returned status:\", loginRes.code, loginRes.json());",
+							"                pm.test(\"Automatic login failed\", false);",
+							"            } else {",
+							"                console.log(\"Automatic login successful!\");",
+							"            }",
+							"        });",
+							"    } else {",
+							"        console.log(\"attempt to login...\");",
+							"        // Check if the response status indicates an invalid/expired token",
+							"        if (res.code === 401 || res.code === 403) {",
+							"            console.log(\"Token invalid or expired. Re-authenticating...\");",
+							"            // Trigger the login request",
+							"            pm.sendRequest(pm.collection.getByName(loginRequestName), function(loginErr, loginRes) { // Use pm.collection.getByName",
+							"                if (loginErr) {",
+							"                    console.error(\"Error during automatic login:\", loginErr);",
+							"                    pm.test(\"Automatic login failed\", false);",
+							"                } else if (loginRes.code !== 200) {",
+							"                    console.error(\"Automatic login returned status:\", loginRes.code, loginRes.json());",
+							"                    pm.test(\"Automatic login failed\", false);",
+							"                } else {",
+							"                    console.log(\"Automatic login successful! New token stored.\");",
+							"                }",
+							"            });",
+							"        } else if (res.code === 200) {",
+							"            console.log(\"Existing token is valid.\");",
+							"        } else {",
+							"            console.log(\"Unexpected response from validation endpoint (Status: \" + res.code + \"). Assuming token might be invalid. Attempting re-login.\");",
+							"            // Fallback to re-login if validation is inconclusive",
+							"            pm.sendRequest(pm.collection.getByName(loginRequestName)); // Use pm.collection.getByName",
+							"        }",
+							"    }",
+							"});"
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "2d44fa68-c277-4ae9-b986-b9ff8628322a",
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "employee",
+			"item": [
+				{
+					"name": "get employee by id",
+					"id": "fc93333c-09f0-4645-94b4-9808c8fe9d05",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost:8080/helpdesk/people/employees/1"
+					},
+					"response": []
+				},
+				{
+					"name": "get all employees",
+					"id": "fba27313-eaab-4ceb-bc1a-f56017893ea2",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost:8080/helpdesk/people/employees"
+					},
+					"response": []
+				},
+				{
+					"name": "Create employee",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "56359429-cd21-4e83-9ee9-487578b70631",
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"id": "7b6ee3b9-d829-4a6b-926b-9bcfca9f7cf0",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"firstName\": \"David\",\n  \"lastName\": \"martinez\",\n  \"birthDate\": \"2000-01-15\",\n  \"email\": \"david.martinez@example.com\",\n  \"phone\": \"666-456-7890\",\n  \"address\": \"123 Main St\",\n  \"zipCode\": \"12345\",\n  \"employeeAuth\": {\n    \"employeeType\": \"Full-time\",\n    \"usernameToken\": \"john.doe\",\n    \"passwordToken\": \"securePassword\",\n    \"role\": \"CSR\"\n  }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:8080/helpdesk/people/employees"
+					},
+					"response": []
+				},
+				{
+					"name": "delete employee",
+					"id": "11559ab0-eec8-49bd-94e1-98bcffdd9551",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": "http://localhost:8080/helpdesk/people/employees/10"
+					},
+					"response": []
+				}
+			],
+			"id": "91241a62-1d1f-4cd8-bbda-a7081442e969"
+		},
+		{
+			"name": "collaborator",
+			"item": [
+				{
+					"name": "get all collaborators",
+					"id": "7cd4050b-642e-45b3-948c-beea6cf340d1",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost:8080/helpdesk/people/collaborators"
+					},
+					"response": []
+				},
+				{
+					"name": "create collaborator",
+					"id": "1c1a6b3e-71d0-416b-b2e3-550d6cc04256",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"firstName\": \"Alex\",\n  \"lastName\": \"Rivera\",\n  \"birthDate\": \"1995-03-20\",\n  \"email\": \"alex.rivera@makani.com\",\n  \"phone\": \"555-123-4567\",\n  \"address\": \"789 Art Lane\",\n  \"zipCode\": \"98765\",\n  \"skills\": [\"Digital Painting, Character Design\"],\n  \"profilePicture\": \"iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=\",\n  \"employeeAuth\": {\n    \"employeeType\": \"Collaborator\",\n    \"usernameToken\": \"alex.rivera\",\n    \"passwordToken\": \"securePass!23\",\n    \"role\": \"COLLABORATOR\"\n  }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:8080/helpdesk/people/collaborators"
+					},
+					"response": []
+				},
+				{
+					"name": "delete collaborator",
+					"id": "a759fd66-d9b7-4380-89a2-449f0d1ef53e",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": "http://localhost:8080/helpdesk/people/collaborators/10"
+					},
+					"response": []
+				}
+			],
+			"id": "b531e507-710d-4826-be96-8add6c94dbff"
+		},
+		{
+			"name": "security",
+			"item": [
+				{
+					"name": "login internal",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "8dd18529-b65e-407b-ade9-1de35373c8b8",
+								"exec": [
+									"// Ensure the request was successful (HTTP Status 200 OK)",
+									"pm.test(\"Status code is 200 OK\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"// Check if the response body is JSON",
+									"pm.test(\"Response is JSON\", function () {",
+									"    pm.response.to.be.json;",
+									"});",
+									"",
+									"// Parse the JSON response",
+									"const responseData = pm.response.json();",
+									"",
+									"// Check if the 'token' property exists in the response",
+									"pm.test(\"Response has 'token' property\", function () {",
+									"    pm.expect(responseData).to.have.property('token');",
+									"});",
+									"",
+									"// Store the token in an environment variable",
+									"if (responseData && responseData.token) {",
+									"    // Set the environment variable 'authToken'",
+									"    pm.environment.set(\"authToken\", responseData.token);",
+									"    console.log(\"Authentication Token stored: \" + responseData.token.substring(0, 20) + \"...\"); // Log a snippet",
+									"} else {",
+									"    console.error(\"Could not find 'token' in the response.\");",
+									"    pm.test(\"Token was not found in response\", false); // Fail the test if token is missing",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"id": "9c5f958e-6806-4143-b1d5-af8820618fba",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"user1\",\n    \"password\": \"pass1\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:8080/helpdesk/security/login/internal"
+					},
+					"response": []
+				},
+				{
+					"name": "check endpoints",
+					"id": "6d2df5fb-dd28-4044-bbe2-58f107bcd40a",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "http://localhost:8080/helpdesk/actuator/mappings"
+					},
+					"response": []
+				}
+			],
+			"id": "ad54926e-dd3d-4628-8504-483cd34c60d2"
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": {
+			"token": "{{authToken}}"
+		}
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "74f5ad61-8ea9-4abc-ab28-72283887a69c",
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "ad17a33a-66e6-4cd1-a5db-a3798580dcc9",
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
