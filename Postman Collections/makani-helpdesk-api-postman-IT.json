@@ -288,7 +288,7 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"url": "http://localhost:8080/helpdesk/people/collaborators/1"
+						"url": "http://localhost:8080/helpdesk/people/collaborators/11"
 					},
 					"response": []
 				}
