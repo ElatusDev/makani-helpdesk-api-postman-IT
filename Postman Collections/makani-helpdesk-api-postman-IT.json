@@ -221,7 +221,7 @@
 					"request": {
 						"method": "DELETE",
 						"header": [],
-						"url": "http://localhost:8080/helpdesk/people/employees/10"
+						"url": "http://localhost:8080/helpdesk/people/employees/1"
 					},
 					"response": []
 				}
@@ -275,7 +275,7 @@
 					"request": {
 						"method": "DELETE",
 						"header": [],
-						"url": "http://localhost:8080/helpdesk/people/collaborators/10"
+						"url": "http://localhost:8080/helpdesk/people/collaborators/1"
 					},
 					"response": []
 				},
