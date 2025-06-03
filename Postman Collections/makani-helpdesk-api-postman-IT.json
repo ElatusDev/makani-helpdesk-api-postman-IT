@@ -153,6 +153,53 @@
 			"item": [
 				{
 					"name": "get employee by id",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "f884beaa-a756-4b9f-bb1b-71024d49886d",
+								"exec": [
+									"// --- Test Suite for 200 OK Response ---",
+									"",
+									"pm.test(\"Status code is 200 OK\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"pm.test(\"Response has a JSON body\", function () {",
+									"    pm.response.to.be.json;",
+									"});",
+									"",
+									"pm.test(\"Response body matches GetEmployeeResponseDTO structure\", function () {",
+									"    const responseJson = pm.response.json();",
+									"",
+									"    // Basic structure and type checks for required fields",
+									"    pm.expect(responseJson).to.be.an('object');",
+									"    pm.expect(responseJson).to.have.property('employeeId').and.to.be.a('number');",
+									"    pm.expect(responseJson).to.have.property('firstName').and.to.be.a('string');",
+									"    pm.expect(responseJson).to.have.property('lastName').and.to.be.a('string');",
+									"    pm.expect(responseJson).to.have.property('email').and.to.be.a('string');",
+									"    pm.expect(responseJson).to.have.property('phone').and.to.be.a('string');",
+									"    pm.expect(responseJson).to.have.property('address').and.to.be.a('string');",
+									"    pm.expect(responseJson).to.have.property('zipCode').and.to.be.a('string');",
+									"    pm.expect(responseJson).to.have.property('birthDate').and.to.be.a('string'); // YYYY-MM-DD string",
+									"",
+									"    // Optional fields (if they exist)",
+									"    if (responseJson.skills !== undefined) {",
+									"        pm.expect(responseJson.skills).to.be.a('string');",
+									"    }",
+									"    if (responseJson.profilePicture !== undefined) {",
+									"        pm.expect(responseJson.profilePicture).to.be.a('string'); // Expecting base64 string",
+									"    }",
+									"",
+									"    // You can also assert on specific values if you know them",
+									"    pm.expect(responseJson.employeeId).to.eql(pm.environment.get(\"employeeId\")); // Verify ID matches request",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
 					"id": "fc93333c-09f0-4645-94b4-9808c8fe9d05",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
