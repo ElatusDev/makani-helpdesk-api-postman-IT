@@ -157,9 +157,47 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "f884beaa-a756-4b9f-bb1b-71024d49886d",
+								"id": "4d7c077d-f8d4-4389-8862-eef747e5a867",
 								"exec": [
-									""
+									"// --- Test Suite for 200 OK Response ---",
+									"",
+									"// Test 1: Verify Status Code is 200",
+									"pm.test(\"Status code is 200 OK\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"// Test 2: Verify Response is JSON",
+									"pm.test(\"Response is JSON\", function () {",
+									"    pm.response.to.be.json;",
+									"});",
+									"",
+									"// Test 3: Verify Response body matches GetEmployeeResponseDTO structure and content",
+									"pm.test(\"Response body matches GetEmployeeResponseDTO structure\", function () {",
+									"    const responseJson = pm.response.json();",
+									"    const employeeId = pm.environment.get(\"employeeId\"); // Get the ID from environment for verification",
+									"",
+									"    // Basic structure and type checks for required fields",
+									"    pm.expect(responseJson).to.be.an('object', 'Response should be an object');",
+									"    pm.expect(responseJson).to.have.property('employeeId').and.to.be.a('number', 'employeeId should be a number');",
+									"    pm.expect(responseJson).to.have.property('firstName').and.to.be.a('string', 'firstName should be a string');",
+									"    pm.expect(responseJson).to.have.property('lastName').and.to.be.a('string', 'lastName should be a string');",
+									"    pm.expect(responseJson).to.have.property('email').and.to.be.a('string', 'email should be a string');",
+									"    pm.expect(responseJson).to.have.property('phone').and.to.be.a('string', 'phone should be a string');",
+									"    pm.expect(responseJson).to.have.property('address').and.to.be.a('string', 'address should be a string');",
+									"    pm.expect(responseJson).to.have.property('zipCode').and.to.be.a('string', 'zipCode should be a string');",
+									"    pm.expect(responseJson).to.have.property('birthDate').and.to.be.a('string', 'birthDate should be a string (YYYY-MM-DD)');",
+									"",
+									"    // Optional fields (if they exist, check their type)",
+									"    if (responseJson.skills !== undefined) {",
+									"        pm.expect(responseJson.skills).to.be.a('string', 'skills should be a string');",
+									"    }",
+									"    if (responseJson.profilePicture !== undefined) {",
+									"        pm.expect(responseJson.profilePicture).to.be.a('string', 'profilePicture should be a base64 string');",
+									"    }",
+									"",
+									"    // Verify the returned ID matches the requested ID",
+									"    pm.expect(responseJson.employeeId).to.eql(parseInt(employeeId), 'Returned employeeId should match the requested ID');",
+									"});"
 								],
 								"type": "text/javascript",
 								"packages": {}
@@ -168,8 +206,12 @@
 						{
 							"listen": "prerequest",
 							"script": {
-								"packages": {},
-								"type": "text/javascript"
+								"id": "c086f944-c5f7-4797-8e62-322396702805",
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
 							}
 						}
 					],
@@ -180,7 +222,7 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"url": "http://localhost:8080/helpdesk/people/employees/1"
+						"url": "{{baseUrl}}/people/employees/1"
 					},
 					"response": []
 				},
