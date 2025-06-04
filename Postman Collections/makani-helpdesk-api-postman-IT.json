@@ -218,6 +218,64 @@
 					"response": []
 				},
 				{
+					"name": "GetEmployeeByIdResponse404",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "26537b75-b4b8-41a5-904a-a29b6f799a21",
+								"exec": [
+									"pm.environment.set(\"employeeId\", 1000);",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "a78ea244-19a4-4232-b2d6-14af8585b080",
+								"exec": [
+									"// Post-response Tests for 'GET Employee by ID - 404 Not Found'",
+									"",
+									"// Test 1: Verify Status Code is 404",
+									"pm.test(\"Status code is 404 Not Found\", function () {",
+									"    pm.response.to.have.status(404);",
+									"});",
+									"",
+									"// Test 2: Verify Response is JSON",
+									"pm.test(\"Response is JSON\", function () {",
+									"    pm.response.to.be.json;",
+									"});",
+									"",
+									"// Test 3: Verify Response body matches ErrorResponseDTO structure",
+									"pm.test(\"Response body matches ErrorResponseDTO structure\", function () {",
+									"    const responseJson = pm.response.json();",
+									"    const requestedId = pm.environment.get(\"employeeId\"); // Get the ID used in the request",
+									"",
+									"    pm.expect(responseJson).to.be.an('object', 'Error response should be an object');",
+									"    pm.expect(responseJson).to.have.property('message').and.to.be.a('string', 'Error message should be a string');",
+									"    pm.expect(responseJson.message).to.include(\"not found\", `empleado con ID: ${requestedId} no existe!`);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"id": "bb602944-4e1d-4862-b713-737ae3fb4bc7",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{baseUrl}}/people/employees/{{employeeId}}"
+					},
+					"response": []
+				},
+				{
 					"name": "get all employees",
 					"id": "fba27313-eaab-4ceb-bc1a-f56017893ea2",
 					"protocolProfileBehavior": {
@@ -275,18 +333,6 @@
 						"method": "DELETE",
 						"header": [],
 						"url": "http://localhost:8080/helpdesk/people/employees/1"
-					},
-					"response": []
-				},
-				{
-					"name": "New Request",
-					"id": "bb602944-4e1d-4862-b713-737ae3fb4bc7",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"method": "GET",
-						"header": []
 					},
 					"response": []
 				}
