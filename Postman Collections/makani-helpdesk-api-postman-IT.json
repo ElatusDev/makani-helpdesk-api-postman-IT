@@ -810,7 +810,7 @@
 			"name": "collaborator",
 			"item": [
 				{
-					"name": "get all collaborators",
+					"name": "GetAllCollaboratorsResponse200",
 					"id": "7cd4050b-642e-45b3-948c-beea6cf340d1",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
