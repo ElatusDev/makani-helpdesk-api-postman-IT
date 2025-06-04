@@ -823,7 +823,7 @@
 					"response": []
 				},
 				{
-					"name": "create collaborator",
+					"name": "CreateCollaboratorResponse201",
 					"id": "1c1a6b3e-71d0-416b-b2e3-550d6cc04256",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
