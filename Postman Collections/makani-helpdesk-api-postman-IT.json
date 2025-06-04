@@ -1392,7 +1392,7 @@
 									"            // Check if collaboratorId was returned (assuming it's named 'collaboratorId' in response)",
 									"            if (createdCollaboratorJson && typeof createdCollaboratorJson.collaboratorId === 'number') {",
 									"                const entityIdToDelete = createdCollaboratorJson.collaboratorId;",
-									"                pm.environment.set(\"collaboratorIdToDelete\", entityIdToDelete); // Store the ID for the main DELETE request",
+									"                pm.environment.set(\"entityIdToDelete\", entityIdToDelete); // Store the ID for the main DELETE request",
 									"                console.log(`Pre-request: Created collaborator with ID ${entityIdToDelete} for deletion.`);",
 									"                pm.test(\"Pre-request: Collaborator creation successful (201)\", true); // Mark success",
 									"            } else {",
