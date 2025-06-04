@@ -330,6 +330,18 @@
 								"type": "text/javascript",
 								"packages": {}
 							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "1ef6a4a5-ed3c-456f-82fc-dd0c6ce91cb7",
+								"exec": [
+									"pm.environment.set(\"employeeDiffEmail\", pm.environment.get(\"employeeDiffEmail\") + 1);",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
 						}
 					],
 					"id": "7b6ee3b9-d829-4a6b-926b-9bcfca9f7cf0",
