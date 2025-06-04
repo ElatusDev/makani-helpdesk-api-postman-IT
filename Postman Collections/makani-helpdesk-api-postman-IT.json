@@ -198,7 +198,7 @@
 							"script": {
 								"id": "c086f944-c5f7-4797-8e62-322396702805",
 								"exec": [
-									"pm.environment.set(\"employeeId\", 1);",
+									"pm.environment.set(\"entityId\", 1);",
 									""
 								],
 								"type": "text/javascript",
@@ -225,7 +225,7 @@
 							"script": {
 								"id": "26537b75-b4b8-41a5-904a-a29b6f799a21",
 								"exec": [
-									"pm.environment.set(\"employeeId\", 1000);",
+									"pm.environment.set(\"entityId\", 1000);",
 									""
 								],
 								"type": "text/javascript",
@@ -256,7 +256,7 @@
 									"",
 									"    pm.expect(responseJson).to.be.an('object', 'Error response should be an object');",
 									"    pm.expect(responseJson).to.have.property('message').and.to.be.a('string', 'Error message should be a string');",
-									"    pm.expect(responseJson.message).to.eql(`empleado con ID: ${requestedId} no existe!`);",
+									"    pm.expect(responseJson.message).to.eql(`Empleado con ID: ${requestedId} no existe!`);",
 									"});"
 								],
 								"type": "text/javascript",
@@ -271,7 +271,7 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"url": "{{baseUrl}}/people/employees/{{employeeId}}"
+						"url": "{{baseUrl}}/people/employees/{{entityId}}"
 					},
 					"response": []
 				},
@@ -387,20 +387,20 @@
 							"script": {
 								"id": "1ef6a4a5-ed3c-456f-82fc-dd0c6ce91cb7",
 								"exec": [
-									"let employeeDiffEmailCurrentNumber = parseInt(pm.environment.get(\"employeeDiffEmail\")); // Convert to integer",
-									"if (isNaN(employeeDiffEmailCurrentNumber)) {",
-									"    console.warn(\"employeeDiffEmail was not a number. Initializing to 0.\");",
+									"let entityDiffEmailCurrentNumber = parseInt(pm.environment.get(\"entityDiffEmail\")); // Convert to integer",
+									"if (isNaN(entityDiffEmailCurrentNumber)) {",
+									"    console.warn(\"entityDiffEmail was not a number.\");",
 									"}",
-									"pm.environment.set(\"employeeDiffEmail\", employeeDiffEmailCurrentNumber + 1);",
+									"pm.environment.set(\"entityDiffEmail\", entityDiffEmailCurrentNumber + 1);",
 									"",
-									"let employeeDiffPhonenumberCurrentNumber = parseInt(pm.environment.get(\"employeeDiffPhonenumber\")); // Convert to integer",
+									"let employeeDiffPhonenumberCurrentNumber = parseInt(pm.environment.get(\"entityDiffPhonenumber\")); // Convert to integer",
 									"if (isNaN(employeeDiffPhonenumberCurrentNumber)) {",
-									"    console.warn(\"employeeDiffPhonenumber was not a number. Initializing to 0.\");",
+									"    console.warn(\"entityDiffPhonenumber was not a number.\");",
 									"}",
-									"pm.environment.set(\"employeeDiffPhonenumber\", employeeDiffEmailCurrentNumber + 1);",
+									"pm.environment.set(\"entityDiffPhonenumber\", employeeDiffEmailCurrentNumber + 1);",
 									"",
-									"var employeeDiffEmail = pm.environment.get(\"employeeDiffEmail\");",
-									"var employeeDiffPhonenumber = pm.environment.get(\"employeeDiffPhonenumber\");",
+									"var employeeDiffEmail = pm.environment.get(\"entityDiffEmail\");",
+									"var employeeDiffPhonenumber = pm.environment.get(\"entityDiffPhonenumber\");",
 									"",
 									""
 								],
@@ -781,10 +781,8 @@
 									"    pm.expect(responseJson).to.have.property('message').and.to.be.a('string', 'Error message should be a string');",
 									"",
 									"    // Optional: Assert on specific error message content for 404",
-									"    // Example: This expects the message to contain \"not found\" or \"does not exist\"",
-									"    pm.expect(responseJson.message.toLowerCase()).to.include(\"not found\", \"Error message should indicate resource not found\");",
 									"    // Or if your API is very specific:",
-									"    // pm.expect(responseJson.message).to.eql(`Employee with ID ${requestedId} not found.`);",
+									"     pm.expect(responseJson.message).to.eql(`Empleado con ID: ${requestedId} no existe!`);",
 									"});"
 								],
 								"type": "text/javascript",
@@ -799,7 +797,7 @@
 					"request": {
 						"method": "DELETE",
 						"header": [],
-						"url": "http://localhost:8080/helpdesk/people/employees/{{employeeIdToDelete}}"
+						"url": "http://localhost:8080/helpdesk/people/employees/{{entityIdToDelete}}"
 					},
 					"response": []
 				}
