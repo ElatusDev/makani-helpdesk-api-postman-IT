@@ -1354,7 +1354,7 @@
 									"  \"phone\": uniquePhone,",
 									"  \"address\": \"456 Test Drive\",",
 									"  \"zipCode\": \"12345\",",
-									"  \"skills\": \"Temporary Delete Collaborator Skills\",",
+									"  \"skills\": [\"Temporary Delete Collaborator Skills\"],",
 									"  \"profilePicture\": \"iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=\", // Minimal Base64",
 									"  \"employeeAuth\": { // Nested InternalAuthDTO for collaborator's authentication",
 									"    \"employeeType\": \"Collaborator\", // Must match the collaborator type",
@@ -1409,6 +1409,35 @@
 								"type": "text/javascript",
 								"packages": {}
 							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "43ddd0eb-3547-4d6d-a139-3bdcce5981ce",
+								"exec": [
+									"pm.test(\"Response status code is 204\", function () {",
+									"    pm.expect(pm.response.code).to.eql(204);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response has no content for successful DELETE request\", function () {",
+									"    pm.expect(pm.response.code).to.equal(204);",
+									"    pm.expect(pm.response.text()).to.be.empty;",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response time is less than 200ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);",
+									"});",
+									"",
+									"pm.test(\"Response body should be empty for DELETE request\", function () {",
+									"    pm.expect(pm.response.text()).to.be.empty;",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
 						}
 					],
 					"id": "a759fd66-d9b7-4380-89a2-449f0d1ef53e",
@@ -1424,13 +1453,96 @@
 				},
 				{
 					"name": "DeleteCollaboratorResponse404",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "ae762376-c386-4ef2-8f90-52485b6e1bfb",
+								"exec": [
+									"pm.environment.set(\"entityIdToDelete\", 0);",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "eaafe1d1-02b6-4835-a5ee-4e2a02a6053d",
+								"exec": [
+									"pm.test(\"Response status code is 404\", function () {",
+									"    pm.expect(pm.response.code).to.eql(404);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response has a Content-Type of application/json\", function () {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql(\"application/json\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response contains a message field\", function () {",
+									"    const responseData = pm.response.json();",
+									"    entityIdToDelete = pm.environment.get(\"entityIdToDelete\");",
+									"    ",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData).to.have.property('message');",
+									"    pm.expect(responseData.message).to.eql(`Colaborador con ID: ${entityIdToDelete} no existe!`);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response time is less than 200ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"The message field must be a non-empty string\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData.message).to.exist.and.to.be.a('string').and.to.have.lengthOf.at.least(1, \"Value should not be empty\");",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
 					"id": "f85786dd-f9e1-4470-ad51-450eaf9163c1",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
 					"request": {
-						"method": "GET",
-						"header": []
+						"method": "DELETE",
+						"header": [],
+						"url": "{{baseUrl}}/people/collaborators/{{entityIdToDelete}}"
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteCollaboratorResponse400DeletionNotAllowed",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "4db0da0b-23a4-4963-9087-0000c4b430d8",
+								"exec": [
+									"pm.environment.set(\"entityIdToDelete\", 1);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"id": "79662e84-004b-4b52-aefb-a96ba8fff8fa",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": "{{baseUrl}}/people/collaborators/{{entityIdToDelete}}"
 					},
 					"response": []
 				}
