@@ -666,9 +666,9 @@
 									"",
 									"            // Check if employeeId was returned",
 									"            if (createdEmployeeJson && typeof createdEmployeeJson.employeeId === 'number') {",
-									"                const employeeIdToDelete = createdEmployeeJson.employeeId;",
-									"                pm.environment.set(\"employeeIdToDelete\", employeeIdToDelete);",
-									"                console.log(`Pre-request: Created employee with ID ${employeeIdToDelete} for deletion.`);",
+									"                const entityIdToDelete = createdEmployeeJson.employeeId;",
+									"                pm.environment.set(\"entityIdToDelete\", entityIdToDelete);",
+									"                console.log(`Pre-request: Created employee with ID ${entityIdToDelete} for deletion.`);",
 									"                pm.test(\"Pre-request: Employee creation successful (201)\", true); // Mark success",
 									"            } else {",
 									"                console.error(\"Pre-request: Employee creation succeeded (201) but missing employeeId in response.\");",
@@ -722,7 +722,7 @@
 					"request": {
 						"method": "DELETE",
 						"header": [],
-						"url": "http://localhost:8080/helpdesk/people/employees/{{employeeIdToDelete}}"
+						"url": "http://localhost:8080/helpdesk/people/employees/{{entityIdToDelete}}"
 					},
 					"response": []
 				},
@@ -736,7 +736,7 @@
 								"exec": [
 									"// Pre-request Script for DELETE /people/employees/{{employeeIdToDelete}}",
 									"//set the employeeIdToDelete to 0 to delete the employee with id 0 which doesnt exists",
-									"pm.environment.set(\"employeeIdToDelete\", 0);",
+									"pm.environment.set(\"entityIdToDelete\", 0);",
 									""
 								],
 								"type": "text/javascript",
@@ -763,7 +763,7 @@
 									"// Test 3: Verify Response body matches ErrorResponseDTO structure",
 									"pm.test(\"Response body matches ErrorResponseDTO structure\", function () {",
 									"    const responseJson = pm.response.json();",
-									"    const requestedId = pm.environment.get(\"employeeIdToDelete\");",
+									"    const requestedId = pm.environment.get(\"entityIdToDelete\");",
 									"",
 									"    pm.expect(responseJson).to.be.an('object', 'Error response should be an object');",
 									"    pm.expect(responseJson).to.have.property('message').and.to.be.a('string', 'Error message should be a string');",
@@ -797,6 +797,73 @@
 			"item": [
 				{
 					"name": "GetAllCollaboratorsResponse200",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "39ca2117-30ff-4f1e-ba0a-d432e769f242",
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {",
+									"    pm.expect(pm.response.code).to.equal(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response time is less than 200ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response is an array with at least one collaborator object\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.be.an('array').that.is.not.empty;",
+									"    responseData.forEach(function(collaborator) {",
+									"        pm.expect(collaborator).to.be.an('object');",
+									"    });",
+									"});",
+									"",
+									"",
+									"pm.test(\"Validate the schema of the collaborator object\", function () {",
+									"    const responseData = pm.response.json();",
+									"",
+									"    pm.expect(responseData).to.be.an('array').that.is.not.empty;",
+									"",
+									"    responseData.forEach(function(collaborator) {",
+									"        pm.expect(collaborator).to.be.an('object');",
+									"        pm.expect(collaborator).to.have.all.keys('firstName', 'lastName', 'birthDate', 'email', 'phone', 'address', 'zipCode', 'skills', 'profilePicture', 'collaboratorId');",
+									"",
+									"        pm.expect(collaborator.firstName).to.be.a('string');",
+									"        pm.expect(collaborator.lastName).to.be.a('string');",
+									"        pm.expect(collaborator.birthDate).to.be.a('string');",
+									"        pm.expect(collaborator.email).to.be.a('string').that.matches(/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/);",
+									"        pm.expect(collaborator.phone).to.be.a('string');",
+									"        pm.expect(collaborator.address).to.be.a('string');",
+									"        pm.expect(collaborator.zipCode).to.be.a('string');",
+									"        pm.expect(collaborator.skills).to.be.an('array');",
+									"        pm.expect(collaborator.profilePicture).to.satisfy(function(value) {",
+									"            return value === null || typeof value === 'string';",
+									"        });",
+									"        pm.expect(collaborator.collaboratorId).to.be.a('number');",
+									"    });",
+									"});",
+									"",
+									"",
+									"pm.test(\"Email is in a valid format\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.be.an('array').that.is.not.empty;",
+									"    responseData.forEach(function(collaborator) {",
+									"        pm.expect(collaborator.email).to.exist;",
+									"        pm.expect(collaborator.email).to.match(/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/, \"Email format is invalid\");",
+									"    });",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
 					"id": "7cd4050b-642e-45b3-948c-beea6cf340d1",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
@@ -804,7 +871,7 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"url": "http://localhost:8080/helpdesk/people/collaborators"
+						"url": "{{baseUrl}}/people/collaborators"
 					},
 					"response": []
 				},
@@ -851,7 +918,7 @@
 							"script": {
 								"id": "f9b55649-02bb-4076-932a-714102994a44",
 								"exec": [
-									"pm.environment.set(\"collaboratorId\", 1000);",
+									"pm.environment.set(\"entityId\", 1000);",
 									""
 								],
 								"type": "text/javascript",
@@ -908,19 +975,79 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"url": "{{baseUrl}}/people/collaborators/{{collaboratorId}}"
+						"url": "{{baseUrl}}/people/collaborators/{{entityId}}"
 					},
 					"response": []
 				},
 				{
 					"name": "GetCollaboratorByIDResponse200",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "7c73f314-542b-4f98-a079-c5ba24c211dd",
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {",
+									"    pm.expect(pm.response.code).to.equal(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response time is less than 200ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response has required fields\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData).to.have.all.keys('firstName', 'lastName', 'birthDate', 'email', 'phone', 'address', 'zipCode', 'skills', 'profilePicture', 'collaboratorId');",
+									"});",
+									"",
+									"",
+									"pm.test(\"Email is in a valid format\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData.email).to.exist.and.to.match(/^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$/);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Skills is an array that can be either empty or contain non-empty strings\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.have.property('skills').that.is.an('array');",
+									"    ",
+									"    responseData.skills.forEach(skill => {",
+									"        pm.expect(skill).to.be.oneOf([null, '']).or.to.be.a('string').that.is.not.empty;",
+									"    });",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "62f1a310-40b0-40cc-9af5-e88991d6a1fb",
+								"exec": [
+									"pm.environment.set(\"entityId\", 1);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
 					"id": "adb88d9b-d350-41a6-889d-eb86cbae011f",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
 					"request": {
 						"method": "GET",
-						"header": []
+						"header": [],
+						"url": "{{baseUrl}}/people/collaborators/{{entityId}}"
 					},
 					"response": []
 				}
