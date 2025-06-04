@@ -610,7 +610,7 @@
 					"response": []
 				},
 				{
-					"name": "delete employee",
+					"name": "DeleteEmployeeResponse204",
 					"id": "11559ab0-eec8-49bd-94e1-98bcffdd9551",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
