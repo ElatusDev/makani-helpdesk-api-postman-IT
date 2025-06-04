@@ -508,7 +508,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"firstName\": \"David\",\n  \"lastName\": \"martinez\",\n  \"birthDate\": \"2000-01-15\",\n  \"email\": \"david.martinez@example.com\",\n  \"phone\": \"666-456-{{employeeDiffPhonenumber}}\",\n  \"address\": \"123 Main St\",\n  \"zipCode\": \"12345\",\n  \"employeeAuth\": {\n    \"employeeType\": \"Full-time\",\n    \"usernameToken\": \"john.doe\",\n    \"passwordToken\": \"securePassword\",\n    \"role\": \"CSR\"\n  }\n}",
+							"raw": "{\n  \"firstName\": \"Alice\",\n  \"lastName\": \"Johnson\",\n  \"birthDate\": \"1990-05-15\",\n  \"email\": \"alice.j@example.com\",\n  \"phone\": \"123-456-{{employeeDiffPhonenumber}}\",\n  \"address\": \"123 Main St\",\n  \"zipCode\": \"12345\",\n  \"skills\": \"Not specified\", \n  \"profilePicture\": \"\", \n  \"employeeAuth\": {\n    \"employeeType\": \"Full-time\",\n    \"usernameToken\": \"alice.johnson\",\n    \"passwordToken\": \"securePass\",\n    \"role\": \"USER\" \n  }\n}\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -611,6 +611,116 @@
 				},
 				{
 					"name": "DeleteEmployeeResponse204",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "0d226282-b726-4474-935a-4bb0af64cbe6",
+								"exec": [
+									"// Pre-request Script for DELETE /people/employees/{{employeeIdToDelete}}",
+									"",
+									"// --- Configuration ---",
+									"// Adjust the path to your employee creation endpoint",
+									"const CREATE_EMPLOYEE_URL = pm.environment.get(\"baseUrl\") + \"/people/employees\";",
+									"// Assume the Authorization header is set at collection/folder level, or set it here too if needed",
+									"const AUTH_TOKEN = pm.environment.get(\"authToken\");",
+									"",
+									"// --- Generate Unique Employee Data ---",
+									"// Use a timestamp to ensure uniqueness for email and phone",
+									"const timestamp = Date.now();",
+									"const uniqueEmail = `delete_test_employee_${timestamp}@example.com`;",
+									"const uniquePhone = `999-000-${timestamp.toString().slice(-4)}`; // Last 4 digits of timestamp",
+									"",
+									"const employeeData = {",
+									"  \"firstName\": \"Delete\",",
+									"  \"lastName\": \"Testuser\",",
+									"  \"birthDate\": \"2000-01-01\",",
+									"  \"email\": uniqueEmail,",
+									"  \"phone\": uniquePhone,",
+									"  \"address\": \"123 Delete Rd\",",
+									"  \"zipCode\": \"00000\",",
+									"  \"skills\": \"Temporary Delete User\",",
+									"  \"profilePicture\": \"iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=\", // Minimal Base64",
+									"  \"employeeAuth\": {",
+									"    \"employeeType\": \"Contract\",",
+									"    \"usernameToken\": `delete_test_${timestamp}`,",
+									"    \"passwordToken\": \"DeletePass123\", // Needs to be hashed by backend",
+									"    \"role\": \"USER\"",
+									"  }",
+									"};",
+									"",
+									"// --- Make the POST request to create the employee ---",
+									"pm.sendRequest({",
+									"    url: CREATE_EMPLOYEE_URL,",
+									"    method: 'POST',",
+									"    header: {",
+									"        'Content-Type': 'application/json',",
+									"        'Authorization': `Bearer ${AUTH_TOKEN}` // Use the existing auth token",
+									"    },",
+									"    body: {",
+									"        mode: 'raw',",
+									"        raw: JSON.stringify(employeeData)",
+									"    }",
+									"}, function (err, res) {",
+									"    if (err) {",
+									"        console.error(\"Pre-request: Error creating employee for deletion: \", err);",
+									"        // Fail the main DELETE request if setup fails",
+									"        pm.test(\"Pre-request: Employee creation failed for delete test\", false);",
+									"    } else {",
+									"        // Ensure creation was successful (HTTP 201)",
+									"        pm.expect(res.code).to.eql(201, \"Pre-request: Expected 201 for employee creation\");",
+									"        const createdEmployeeJson = res.json();",
+									"        ",
+									"        // Check if employeeId was returned",
+									"        pm.expect(createdEmployeeJson).to.have.property(\"employeeId\", \"Pre-request: Employee ID should be returned\");",
+									"",
+									"        // Store the newly created employeeId in an environment variable",
+									"        const employeeIdToDelete = createdEmployeeJson.employeeId;",
+									"        pm.environment.set(\"employeeIdToDelete\", employeeIdToDelete);",
+									"        console.log(`Pre-request: Created employee with ID ${employeeIdToDelete} for deletion.`);",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "bf12c01a-ac14-461b-a12d-3cd24bc891e1",
+								"exec": [
+									"pm.test(\"Response status code is 204\", function () {",
+									"    pm.expect(pm.response.code).to.eql(204);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response has no content for successful DELETE request\", function () {",
+									"    pm.expect(pm.response.code).to.equal(204);",
+									"    pm.expect(pm.response.text()).to.be.empty;",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response time is less than 200ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response headers include Content-Type as text/xml\", function () {",
+									"    pm.expect(pm.response.headers.get('Content-Type')).to.eql('text/xml');",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response body should be empty for DELETE request\", function () {",
+									"    pm.expect(pm.response.text()).to.be.empty;",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
 					"id": "11559ab0-eec8-49bd-94e1-98bcffdd9551",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
@@ -618,7 +728,7 @@
 					"request": {
 						"method": "DELETE",
 						"header": [],
-						"url": "http://localhost:8080/helpdesk/people/employees/11"
+						"url": "http://localhost:8080/helpdesk/people/employees/{{employeeIdToDelete}}"
 					},
 					"response": []
 				}
