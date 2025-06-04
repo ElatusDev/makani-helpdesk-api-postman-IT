@@ -213,7 +213,7 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"url": "{{baseUrl}}/people/employees/{{employeeId}}"
+						"url": "{{baseUrl}}/people/employees/{{entityId}}"
 					},
 					"response": []
 				},
