@@ -858,7 +858,20 @@
 					"response": []
 				},
 				{
-					"name": "get collaborator by id",
+					"name": "GetCollaboratorByIdResponse404",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "f9b55649-02bb-4076-932a-714102994a44",
+								"exec": [
+									"pm.environment.set(\"collaboratorId\", 1000);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
 					"id": "7def3ed8-64c1-4d99-9acf-4eb731fb0580",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
@@ -866,7 +879,7 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"url": "http://localhost:8080/helpdesk/people/collaborators/11"
+						"url": "{{baseUrl}}/people/collaborators/{{collaboratorId}}"
 					},
 					"response": []
 				},
