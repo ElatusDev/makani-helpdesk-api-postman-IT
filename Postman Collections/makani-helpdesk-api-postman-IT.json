@@ -790,7 +790,7 @@
 					"response": []
 				},
 				{
-					"name": "DeleteEmployeeResponse404 Copy",
+					"name": "DeleteEmployeeResponse400DeletionNotAllowed",
 					"event": [
 						{
 							"listen": "prerequest",
@@ -799,7 +799,7 @@
 								"exec": [
 									"// Pre-request Script for DELETE /people/employees/{{employeeIdToDelete}}",
 									"//set the employeeIdToDelete to 0 to delete the employee with id 0 which doesnt exists",
-									"pm.environment.set(\"entityIdToDelete\", 0);",
+									"pm.environment.set(\"entityIdToDelete\", 1);",
 									""
 								],
 								"type": "text/javascript",
@@ -814,8 +814,8 @@
 									"// Post-response Tests for 'DELETE Employee by ID - 404 Not Found'",
 									"",
 									"// Test 1: Verify Status Code is 404",
-									"pm.test(\"Status code is 404 Not Found\", function () {",
-									"    pm.response.to.have.status(404);",
+									"pm.test(\"Status code is 400 Deletion not allowed\", function () {",
+									"    pm.response.to.have.status(400);",
 									"});",
 									"",
 									"// Test 2: Verify Response is JSON",
@@ -833,7 +833,7 @@
 									"",
 									"    // Optional: Assert on specific error message content for 404",
 									"    // Or if your API is very specific:",
-									"     pm.expect(responseJson.message).to.eql(`Empleado con ID: ${requestedId} no existe!`);",
+									"     pm.expect(responseJson.message).to.eql(\"Eliminacion de empleado no esta permitida! dicha accion corromperia los datos de la organizacion\");",
 									"});"
 								],
 								"type": "text/javascript",
@@ -1324,7 +1324,7 @@
 					"response": []
 				},
 				{
-					"name": "DeleteCollaborator",
+					"name": "DeleteCollaboratorResponse204",
 					"id": "a759fd66-d9b7-4380-89a2-449f0d1ef53e",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
@@ -1332,7 +1332,7 @@
 					"request": {
 						"method": "DELETE",
 						"header": [],
-						"url": "http://localhost:8080/helpdesk/people/collaborators/1"
+						"url": "{{baseUrl}}/people/collaborators/{{entityIdToDelete}}"
 					},
 					"response": []
 				}
