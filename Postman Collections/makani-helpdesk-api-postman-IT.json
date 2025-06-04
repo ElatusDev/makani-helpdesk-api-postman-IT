@@ -335,7 +335,7 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"url": "http://localhost:8080/helpdesk/people/employees"
+						"url": "{{baseUrl}}/people/employees"
 					},
 					"response": []
 				},
@@ -1043,6 +1043,46 @@
 					"response": []
 				},
 				{
+					"name": "CreateCollaboratorResponse400DuplicatePhoneNumber",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "a4e09941-237e-41f3-b1e3-896aeac6bb94",
+								"exec": [
+									"let currentNumber = parseInt(pm.environment.get(\"entityDiffEmail\")); // Convert to integer",
+									"if (isNaN(currentNumber)) {",
+									"    console.warn(\"entityDiffEmail was not a number\");",
+									"}",
+									"pm.environment.set(\"entityDiffEmail\", currentNumber + 1);",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"id": "1a67b9b0-1709-40f2-babd-518d6662fb4c",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"firstName\": \"Karen\",\n  \"lastName\": \"White\",\n  \"birthDate\": \"1980-03-25\",\n  \"email\": \"karen.w{{entityDiffEmail}}@example.com\",\n  \"phone\": \"333-444-5555\",\n  \"address\": \"333 Pinecrest Ln\",\n  \"zipCode\": \"33333\",\n  \"skills\": \"Painting, Drawing\",\n  \"profilePicture\": \"\", \n  \"employeeAuth\": {\n    \"employeeType\": \"Collaborator\", \n    \"usernameToken\": \"karen.white\", \n    \"passwordToken\": \"securePass\", \n    \"role\": \"COLLABORATOR\" \n  }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{baseUrl}}/people/collaborators"
+					},
+					"response": []
+				},
+				{
 					"name": "delete collaborator",
 					"id": "a759fd66-d9b7-4380-89a2-449f0d1ef53e",
 					"protocolProfileBehavior": {
@@ -1193,28 +1233,6 @@
 						"method": "GET",
 						"header": [],
 						"url": "{{baseUrl}}/people/collaborators/{{entityId}}"
-					},
-					"response": []
-				},
-				{
-					"name": "New Request",
-					"id": "1a67b9b0-1709-40f2-babd-518d6662fb4c",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n  \"firstName\": \"Karen\",\n  \"lastName\": \"White\",\n  \"birthDate\": \"1980-03-25\",\n  \"email\": \"karen.w{{entityDiffEmail}}@example.com\",\n  \"phone\": \"333-444-5555\",\n  \"address\": \"333 Pinecrest Ln\",\n  \"zipCode\": \"33333\",\n  \"skills\": \"Painting, Drawing\",\n  \"profilePicture\": \"\", \n  \"employeeAuth\": {\n    \"employeeType\": \"Collaborator\", \n    \"usernameToken\": \"karen.white\", \n    \"passwordToken\": \"securePass\", \n    \"role\": \"COLLABORATOR\" \n  }\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": "{{baseUrl}}/people/collaborators"
 					},
 					"response": []
 				}
