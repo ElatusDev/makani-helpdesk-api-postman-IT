@@ -222,7 +222,7 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"url": "{{baseUrl}}/people/employees/1"
+						"url": "{{baseUrl}}/people/employees/{{employeeId}}"
 					},
 					"response": []
 				},
