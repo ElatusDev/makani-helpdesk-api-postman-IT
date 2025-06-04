@@ -256,7 +256,7 @@
 									"",
 									"    pm.expect(responseJson).to.be.an('object', 'Error response should be an object');",
 									"    pm.expect(responseJson).to.have.property('message').and.to.be.a('string', 'Error message should be a string');",
-									"    pm.expect(responseJson.message).to.include(\"not found\", `empleado con ID: ${requestedId} no existe!`);",
+									"    pm.expect(responseJson.message).to.eql(`empleado con ID: ${requestedId} no existe!`);",
 									"});"
 								],
 								"type": "text/javascript",
@@ -276,7 +276,7 @@
 					"response": []
 				},
 				{
-					"name": "get all employees",
+					"name": "GetAllEmployeesResponse200",
 					"id": "fba27313-eaab-4ceb-bc1a-f56017893ea2",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
@@ -289,7 +289,7 @@
 					"response": []
 				},
 				{
-					"name": "Create employee",
+					"name": "CreateEmployeeResponse201",
 					"event": [
 						{
 							"listen": "test",
