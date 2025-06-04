@@ -277,6 +277,57 @@
 				},
 				{
 					"name": "GetAllEmployeesResponse200",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "ffa91204-b73d-4632-bfaf-599e68152ff1",
+								"exec": [
+									"pm.test(\"Response status code is 200\", function () {",
+									"    pm.expect(pm.response.code).to.equal(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response time is less than 200ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response has the required fields\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.be.an('array').that.is.not.empty;",
+									"    ",
+									"    responseData.forEach(employee => {",
+									"        pm.expect(employee).to.have.all.keys('firstName', 'lastName', 'birthDate', 'email', 'phone', 'address', 'zipCode', 'employeeId');",
+									"    });",
+									"});",
+									"",
+									"",
+									"pm.test(\"Email is in a valid format\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.be.an('array').that.is.not.empty;",
+									"    responseData.forEach(function(employee) {",
+									"        pm.expect(employee.email).to.match(/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/, \"Email format is invalid\");",
+									"    });",
+									"});",
+									"",
+									"",
+									"pm.test(\"EmployeeId is a non-negative integer\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    responseData.forEach(function(employee) {",
+									"        pm.expect(employee.employeeId).to.be.a('number').and.to.be.at.least(0, \"EmployeeId should be a non-negative integer\");",
+									"    });",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
 					"id": "fba27313-eaab-4ceb-bc1a-f56017893ea2",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
@@ -379,94 +430,6 @@
 					"response": []
 				},
 				{
-					"name": "CreateEmployeeResponse400DuplicatePhoneNumber",
-					"event": [
-						{
-							"listen": "test",
-							"script": {
-								"id": "56359429-cd21-4e83-9ee9-487578b70631",
-								"exec": [
-									"pm.test(\"Response status code is 400\", function () {",
-									"    pm.expect(pm.response.code).to.eql(400);",
-									"});",
-									"",
-									"",
-									"pm.test(\"Response has a message field\", function () {",
-									"    const responseData = pm.response.json();",
-									"    ",
-									"    pm.expect(responseData).to.be.an('object');",
-									"    pm.expect(responseData).to.have.property('message');",
-									"});",
-									"",
-									"",
-									"pm.test(\"Message must be a non-empty string\", function () {",
-									"    const responseData = pm.response.json();",
-									"    ",
-									"    pm.expect(responseData).to.be.an('object');",
-									"    pm.expect(responseData.message).to.exist.and.to.be.a('string').and.to.have.lengthOf.at.least(1, \"Value should not be empty\");",
-									"});",
-									"",
-									"",
-									"pm.test(\"Response time is less than 200ms\", function () {",
-									"    pm.expect(pm.response.responseTime).to.be.below(200);",
-									"});",
-									"",
-									"",
-									"pm.test(\"Response schema is valid\", function () {",
-									"    const responseData = pm.response.json();",
-									"    ",
-									"    pm.expect(responseData).to.be.an('object');",
-									"    pm.expect(responseData).to.have.all.keys('message');",
-									"    pm.expect(responseData.message).to.be.a('string');",
-									"});",
-									""
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						},
-						{
-							"listen": "prerequest",
-							"script": {
-								"id": "1ef6a4a5-ed3c-456f-82fc-dd0c6ce91cb7",
-								"exec": [
-									"let currentNumber = parseInt(pm.environment.get(\"employeeDiffPhonenumber\")); // Convert to integer",
-									"if (isNaN(currentNumber)) {",
-									"    currentNumber = 0; // Or whatever your desired starting point is",
-									"    console.warn(\"employeeDiffPhonenumber was not a number. Initializing to 0.\");",
-									"}",
-									"pm.environment.set(\"employeeDiffPhonenumber\", currentNumber + 1);",
-									"",
-									"var employeeDiffPhonenumber = pm.environment.get(\"employeeDiffPhonenumber\");",
-									"",
-									""
-								],
-								"type": "text/javascript",
-								"packages": {}
-							}
-						}
-					],
-					"id": "8e6c0082-2cf1-4b26-a4e4-88c7c151b751",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n  \"firstName\": \"David\",\n  \"lastName\": \"martinez\",\n  \"birthDate\": \"2000-01-15\",\n  \"email\": \"david.martinez@example.com\",\n  \"phone\": \"666-456-{{employeeDiffPhonenumber}}\",\n  \"address\": \"123 Main St\",\n  \"zipCode\": \"12345\",\n  \"employeeAuth\": {\n    \"employeeType\": \"Full-time\",\n    \"usernameToken\": \"john.doe\",\n    \"passwordToken\": \"securePassword\",\n    \"role\": \"CSR\"\n  }\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": "http://localhost:8080/helpdesk/people/employees"
-					},
-					"response": []
-				},
-				{
 					"name": "CreateEmployeeResponse400DuplicateEmail",
 					"event": [
 						{
@@ -518,6 +481,98 @@
 							"script": {
 								"id": "1ef6a4a5-ed3c-456f-82fc-dd0c6ce91cb7",
 								"exec": [
+									"// Increment employeeDiffPhonenumber by 1 each time the request is made.",
+									"",
+									"let currentNumber = parseInt(pm.environment.get(\"employeeDiffPhonenumber\")); // Convert to integer",
+									"if (isNaN(currentNumber)) {",
+									"    currentNumber = 0; // Or whatever your desired starting point is",
+									"    console.warn(\"employeeDiffPhonenumber was not a number. Initializing to 0.\");",
+									"}",
+									"pm.environment.set(\"employeeDiffPhonenumber\", currentNumber + 1);",
+									"",
+									"var employeeDiffPhonenumber = pm.environment.get(\"employeeDiffPhonenumber\");",
+									"",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"id": "8e6c0082-2cf1-4b26-a4e4-88c7c151b751",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"firstName\": \"David\",\n  \"lastName\": \"martinez\",\n  \"birthDate\": \"2000-01-15\",\n  \"email\": \"david.martinez@example.com\",\n  \"phone\": \"666-456-{{employeeDiffPhonenumber}}\",\n  \"address\": \"123 Main St\",\n  \"zipCode\": \"12345\",\n  \"employeeAuth\": {\n    \"employeeType\": \"Full-time\",\n    \"usernameToken\": \"john.doe\",\n    \"passwordToken\": \"securePassword\",\n    \"role\": \"CSR\"\n  }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:8080/helpdesk/people/employees"
+					},
+					"response": []
+				},
+				{
+					"name": "CreateEmployeeResponse400DuplicatePhoneNumber",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "56359429-cd21-4e83-9ee9-487578b70631",
+								"exec": [
+									"pm.test(\"Response status code is 400\", function () {",
+									"    pm.expect(pm.response.code).to.eql(400);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response has a message field\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData).to.have.property('message');",
+									"});",
+									"",
+									"",
+									"pm.test(\"Message must be a non-empty string\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData.message).to.exist.and.to.be.a('string').and.to.have.lengthOf.at.least(1, \"Value should not be empty\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response time is less than 200ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response schema is valid\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData).to.have.all.keys('message');",
+									"    pm.expect(responseData.message).to.be.a('string');",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "1ef6a4a5-ed3c-456f-82fc-dd0c6ce91cb7",
+								"exec": [
+									"// Increment employeeDiffEmail by 1 each time the request is made.",
+									"",
 									"let currentNumber = parseInt(pm.environment.get(\"employeeDiffEmail\")); // Convert to integer",
 									"if (isNaN(currentNumber)) {",
 									"    currentNumber = 0; // Or whatever your desired starting point is",
@@ -543,7 +598,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"firstName\": \"David\",\n  \"lastName\": \"martinez\",\n  \"birthDate\": \"2000-01-15\",\n  \"email\": \"david.martinez@example.com\",\n  \"phone\": \"666-456-{{employeeDiffPhonenumber}}\",\n  \"address\": \"123 Main St\",\n  \"zipCode\": \"12345\",\n  \"employeeAuth\": {\n    \"employeeType\": \"Full-time\",\n    \"usernameToken\": \"john.doe\",\n    \"passwordToken\": \"securePassword\",\n    \"role\": \"CSR\"\n  }\n}",
+							"raw": "{\n  \"firstName\": \"David\",\n  \"lastName\": \"martinez\",\n  \"birthDate\": \"2000-01-15\",\n  \"email\": \"david.martinez{{employeeDiffEmail}}@example.com\",\n  \"phone\": \"666-456-1111\",\n  \"address\": \"123 Main St\",\n  \"zipCode\": \"12345\",\n  \"employeeAuth\": {\n    \"employeeType\": \"Full-time\",\n    \"usernameToken\": \"john.doe\",\n    \"passwordToken\": \"securePassword\",\n    \"role\": \"CSR\"\n  }\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -563,7 +618,7 @@
 					"request": {
 						"method": "DELETE",
 						"header": [],
-						"url": "http://localhost:8080/helpdesk/people/employees/1"
+						"url": "http://localhost:8080/helpdesk/people/employees/11"
 					},
 					"response": []
 				}
