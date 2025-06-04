@@ -537,6 +537,8 @@
 									"    ",
 									"    pm.expect(responseData).to.be.an('object');",
 									"    pm.expect(responseData).to.have.property('message');",
+									"    pm.expect(responseData.message).to.eql(\"Error, valor enviado en campo numero de celular ya esta registrado\")",
+									"",
 									"});",
 									"",
 									"",
@@ -737,7 +739,7 @@
 					"response": []
 				},
 				{
-					"name": "DeleteEmployeeResponse204 Copy",
+					"name": "DeleteEmployeeResponse404",
 					"event": [
 						{
 							"listen": "prerequest",
