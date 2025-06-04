@@ -336,8 +336,17 @@
 							"script": {
 								"id": "1ef6a4a5-ed3c-456f-82fc-dd0c6ce91cb7",
 								"exec": [
-									"pm.environment.set(\"employeeDiffEmail\", pm.environment.get(\"employeeDiffEmail\") + 1);",
-									"pm.environment.set(\"employeeDiffPhonenumber\", pm.environment.get(\"employeeDiffPhonenumber\") + 1);",
+									"let employeeDiffEmailCurrentNumber = parseInt(pm.environment.get(\"employeeDiffEmail\")); // Convert to integer",
+									"if (isNaN(employeeDiffEmailCurrentNumber)) {",
+									"    console.warn(\"employeeDiffEmail was not a number. Initializing to 0.\");",
+									"}",
+									"pm.environment.set(\"employeeDiffEmail\", employeeDiffEmailCurrentNumber + 1);",
+									"",
+									"let employeeDiffPhonenumberCurrentNumber = parseInt(pm.environment.get(\"employeeDiffPhonenumber\")); // Convert to integer",
+									"if (isNaN(employeeDiffPhonenumberCurrentNumber)) {",
+									"    console.warn(\"employeeDiffPhonenumber was not a number. Initializing to 0.\");",
+									"}",
+									"pm.environment.set(\"employeeDiffPhonenumber\", employeeDiffEmailCurrentNumber + 1);",
 									"",
 									"var employeeDiffEmail = pm.environment.get(\"employeeDiffEmail\");",
 									"var employeeDiffPhonenumber = pm.environment.get(\"employeeDiffPhonenumber\");",
@@ -370,7 +379,7 @@
 					"response": []
 				},
 				{
-					"name": "CreateEmployeeResponse400",
+					"name": "CreateEmployeeResponse400DuplicatePhoneNumber",
 					"event": [
 						{
 							"listen": "test",
@@ -438,6 +447,94 @@
 						}
 					],
 					"id": "8e6c0082-2cf1-4b26-a4e4-88c7c151b751",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"firstName\": \"David\",\n  \"lastName\": \"martinez\",\n  \"birthDate\": \"2000-01-15\",\n  \"email\": \"david.martinez@example.com\",\n  \"phone\": \"666-456-{{employeeDiffPhonenumber}}\",\n  \"address\": \"123 Main St\",\n  \"zipCode\": \"12345\",\n  \"employeeAuth\": {\n    \"employeeType\": \"Full-time\",\n    \"usernameToken\": \"john.doe\",\n    \"passwordToken\": \"securePassword\",\n    \"role\": \"CSR\"\n  }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:8080/helpdesk/people/employees"
+					},
+					"response": []
+				},
+				{
+					"name": "CreateEmployeeResponse400DuplicateEmail",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "56359429-cd21-4e83-9ee9-487578b70631",
+								"exec": [
+									"pm.test(\"Response status code is 400\", function () {",
+									"    pm.expect(pm.response.code).to.eql(400);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response has a message field\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData).to.have.property('message');",
+									"});",
+									"",
+									"",
+									"pm.test(\"Message must be a non-empty string\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData.message).to.exist.and.to.be.a('string').and.to.have.lengthOf.at.least(1, \"Value should not be empty\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response time is less than 200ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response schema is valid\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData).to.have.all.keys('message');",
+									"    pm.expect(responseData.message).to.be.a('string');",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "1ef6a4a5-ed3c-456f-82fc-dd0c6ce91cb7",
+								"exec": [
+									"let currentNumber = parseInt(pm.environment.get(\"employeeDiffEmail\")); // Convert to integer",
+									"if (isNaN(currentNumber)) {",
+									"    currentNumber = 0; // Or whatever your desired starting point is",
+									"    console.warn(\"employeeDiffEmail was not a number. Initializing to 0.\");",
+									"}",
+									"pm.environment.set(\"employeeDiffEmail\", currentNumber + 1);",
+									"",
+									"var employeeDiffPhonenumber = pm.environment.get(\"employeeDiffEmail\");",
+									"",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"id": "f8d2a5a1-e30e-4f00-82b2-679c1e31f769",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
