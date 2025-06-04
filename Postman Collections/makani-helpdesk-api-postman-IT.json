@@ -152,7 +152,7 @@
 			"name": "employee",
 			"item": [
 				{
-					"name": "get employee by id",
+					"name": "GetEmployeeByIdResponse200",
 					"event": [
 						{
 							"listen": "test",
