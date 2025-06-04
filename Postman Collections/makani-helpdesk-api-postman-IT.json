@@ -1421,6 +1421,18 @@
 						"url": "{{baseUrl}}/people/collaborators/{{entityIdToDelete}}"
 					},
 					"response": []
+				},
+				{
+					"name": "DeleteCollaboratorResponse404",
+					"id": "f85786dd-f9e1-4470-ad51-450eaf9163c1",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
 				}
 			],
 			"id": "b531e507-710d-4826-be96-8add6c94dbff"
