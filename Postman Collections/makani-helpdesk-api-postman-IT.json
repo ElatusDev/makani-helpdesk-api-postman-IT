@@ -296,6 +296,35 @@
 							"script": {
 								"id": "56359429-cd21-4e83-9ee9-487578b70631",
 								"exec": [
+									"pm.test(\"Response status code is 201\", function () {",
+									"    pm.expect(pm.response.code).to.eql(201);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response time is less than 200ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response has the required fields\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData).to.have.property('employeeId').that.is.a('number');",
+									"});",
+									"",
+									"",
+									"pm.test(\"Employee ID is a non-negative integer\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData.employeeId).to.exist.and.to.be.a('number').and.to.be.at.least(0);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response Content-Type is application/json\", function () {",
+									"    pm.expect(pm.response.headers.get('Content-Type')).to.include(\"application/json\");",
+									"});",
 									""
 								],
 								"type": "text/javascript",
@@ -312,7 +341,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"firstName\": \"David\",\n  \"lastName\": \"martinez\",\n  \"birthDate\": \"2000-01-15\",\n  \"email\": \"david.martinez@example.com\",\n  \"phone\": \"666-456-7890\",\n  \"address\": \"123 Main St\",\n  \"zipCode\": \"12345\",\n  \"employeeAuth\": {\n    \"employeeType\": \"Full-time\",\n    \"usernameToken\": \"john.doe\",\n    \"passwordToken\": \"securePassword\",\n    \"role\": \"CSR\"\n  }\n}",
+							"raw": "{\n  \"firstName\": \"David\",\n  \"lastName\": \"martinez\",\n  \"birthDate\": \"2000-01-15\",\n  \"email\": \"david.martinez{{$employeeDiffEmail}}@example.com\",\n  \"phone\": \"666-456-{{employeeDiffPhonenumber}}\",\n  \"address\": \"123 Main St\",\n  \"zipCode\": \"12345\",\n  \"employeeAuth\": {\n    \"employeeType\": \"Full-time\",\n    \"usernameToken\": \"john.doe\",\n    \"passwordToken\": \"securePassword\",\n    \"role\": \"CSR\"\n  }\n}",
 							"options": {
 								"raw": {
 									"language": "json"
