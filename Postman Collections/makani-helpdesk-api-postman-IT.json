@@ -869,6 +869,18 @@
 						"url": "http://localhost:8080/helpdesk/people/collaborators/11"
 					},
 					"response": []
+				},
+				{
+					"name": "GetCollaboratorByIDResponse200",
+					"id": "adb88d9b-d350-41a6-889d-eb86cbae011f",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
 				}
 			],
 			"id": "b531e507-710d-4826-be96-8add6c94dbff"
