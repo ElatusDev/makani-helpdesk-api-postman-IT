@@ -1673,6 +1673,24 @@
 				}
 			],
 			"id": "ad54926e-dd3d-4628-8504-483cd34c60d2"
+		},
+		{
+			"name": "AdultStudent",
+			"item": [
+				{
+					"name": "New Request",
+					"id": "67ce3b27-a35d-4a2a-92e2-f9109a5409db",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				}
+			],
+			"id": "1607bf37-a494-4e1f-820a-7cdc0fc7e0e6"
 		}
 	],
 	"auth": {
