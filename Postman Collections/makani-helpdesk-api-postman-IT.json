@@ -1706,7 +1706,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"firstName\": \"Maria\",\n  \"lastName\": \"Gonzales\",\n  \"email\": \"maria.gonzales@example.com\",\n  \"phone\": \"555-123-9876\",\n  \"address\": \"123 Oak Avenue\",\n  \"zipCode\": \"90210\",\n  \"birthDate\": \"1998-07-20\",\n  \"profilePicture\": \"iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=\",\n  \"customerAuth\": {\n    \"provider\": \"Google\",\n    \"token\": \"some_google_auth_token_string\"\n  }\n}",
+							"raw": "{\n  \"firstName\": \"Maria\",\n  \"lastName\": \"Gonzales\",\n  \"birthDate\": \"1998-07-20\",\n  \"email\": \"maria.gonzales@example.com\",\n  \"phone\": \"555-123-9876\",\n  \"address\": \"123 Oak Avenue\",\n  \"zipCode\": \"90210\",\n  \"profilePicture\": \"iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=\",\n  \"auth\": {\n    \"provider\": \"Google\",\n    \"token\": \"some_google_auth_token_for_adult_student\"\n  }\n}",
 							"options": {
 								"raw": {
 									"language": "json"
