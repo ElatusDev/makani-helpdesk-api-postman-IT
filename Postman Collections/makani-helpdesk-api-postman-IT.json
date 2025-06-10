@@ -2014,7 +2014,7 @@
 									"            // Check if adultStudentId was returned (assuming it's named 'adultStudentId' in response)",
 									"            if (createdAdultStudentJson && typeof createdAdultStudentJson.adultStudentId === 'number') {",
 									"                const entityIdToDelete = createdAdultStudentJson.adultStudentId;",
-									"                pm.environment.set(\"adultStudentIdToDelete\", entityIdToDelete); // Store the ID for the main DELETE request",
+									"                pm.environment.set(\"entityIdToDelete\", entityIdToDelete); // Store the ID for the main DELETE request",
 									"                console.log(`Pre-request: Created adult student with ID ${entityIdToDelete} for deletion.`);",
 									"                pm.test(\"Pre-request: Adult student creation successful (201)\", true); // Mark success",
 									"            } else {",
