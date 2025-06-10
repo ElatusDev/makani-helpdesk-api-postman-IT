@@ -1334,7 +1334,7 @@
 					"response": []
 				},
 				{
-					"name": "DeleteCollaboratorResponse204",
+					"name": "DeleteCollaboratorResponse400",
 					"event": [
 						{
 							"listen": "prerequest",
@@ -2015,14 +2015,11 @@
 									"                const entityIdToDelete = createdAdultStudentJson.adultStudentId;",
 									"                pm.environment.set(\"entityIdToDelete\", entityIdToDelete); // Store the ID for the main DELETE request",
 									"                console.log(`Pre-request: Created adult student with ID ${entityIdToDelete} for deletion.`);",
-									"                pm.test(\"Pre-request: Adult student creation successful (201)\", true); // Mark success",
 									"            } else {",
 									"                console.error(\"Pre-request: Adult student creation succeeded (201) but missing adultStudentId in response.\");",
-									"                pm.test(\"Pre-request: Adult student creation failed (missing ID)\", false);",
 									"            }",
 									"        } else {",
 									"            console.error(`Pre-request: Adult student creation failed with status ${res.code}. Response:`, res.json());",
-									"            pm.test(\"Pre-request: Adult student creation failed for delete test\", false); // Mark failure",
 									"        }",
 									"    }",
 									"});"
@@ -2030,9 +2027,114 @@
 								"type": "text/javascript",
 								"packages": {}
 							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "f62b18a5-f923-4c96-b0a0-e3e799c1984c",
+								"exec": [
+									"pm.test(\"Response status code is 204\", function () {",
+									"    pm.expect(pm.response.code).to.equal(204);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response has no content for successful DELETE request\", function () {",
+									"    pm.expect(pm.response.code).to.eql(204);",
+									"    pm.expect(pm.response.text()).to.be.empty;",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response time is less than 200ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response Content-Type is application/json\", function () {",
+									"    pm.expect(pm.response.headers.get('Content-Type')).to.equal(\"application/json\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"Ensure that the response body is empty\", function () {",
+									"    const responseData = pm.response.json();",
+									"    pm.expect(responseData).to.be.an('object').that.is.empty;",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
 						}
 					],
 					"id": "b208b9a3-e670-42cf-a981-22ad7b4ce93e",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": "{{baseUrl}}/people/adultStudents/{{entityIdToDelete}}"
+					},
+					"response": []
+				},
+				{
+					"name": "DeleteAdultStudentResponse404",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "e81292aa-728b-407d-9bee-b6889c4a64e3",
+								"exec": [
+									"/pm.environment.set(\"entityIdToDelete\", 0);",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "f62b18a5-f923-4c96-b0a0-e3e799c1984c",
+								"exec": [
+									"pm.test(\"Response status code is 404\", function () {",
+									"    pm.expect(pm.response.code).to.eql(404);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response has a Content-Type of application/json\", function () {",
+									"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.eql(\"application/json\");",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response contains a message field\", function () {",
+									"    const responseData = pm.response.json();",
+									"    entityIdToDelete = pm.environment.get(\"entityIdToDelete\");",
+									"    ",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData).to.have.property('message');",
+									"    pm.expect(responseData.message).to.eql(`Alumno con ID: ${entityIdToDelete} no existe!`);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response time is less than 200ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"The message field must be a non-empty string\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData.message).to.exist.and.to.be.a('string').and.to.have.lengthOf.at.least(1, \"Value should not be empty\");",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"id": "dec6e1c3-5512-4e33-b46c-073dd4d5404e",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
