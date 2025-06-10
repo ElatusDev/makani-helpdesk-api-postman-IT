@@ -1767,6 +1767,57 @@
 						"url": "{{baseUrl}}/people/adultStudents"
 					},
 					"response": []
+				},
+				{
+					"name": "CreateAdultStudentResponse400DuplicateEmail",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "964cae58-b5e4-471e-ba04-6b1f5a19a23a",
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "90d78734-ec0f-49cf-aed9-494830c35e7e",
+								"exec": [
+									"let entityDiffPhonenumberCurrentNumber = parseInt(pm.environment.get(\"entityDiffPhonenumber\")); // Convert to integer",
+									"if (isNaN(entityDiffPhonenumberCurrentNumber)) {",
+									"    console.warn(\"entityDiffPhonenumber was not a number.\");",
+									"}",
+									"pm.environment.set(\"entityDiffPhonenumber\", entityDiffPhonenumberCurrentNumber + 1);",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"id": "97bfb5d1-2905-47b9-b635-b279ceb24d5d",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"firstName\": \"Ava\",\n  \"lastName\": \"Rodriguez\",\n  \"birthDate\": \"1998-07-15\",\n  \"email\": \"ava.r@example.com\",\n  \"phone\": \"111-111-{{entityDiffPhonenumber}}\",\n  \"address\": \"111 Pine St\",\n  \"zipCode\": \"11111\",\n  \"profilePicture\": null,\n  \"auth\": {\n    \"customerAuthId\": 1,\n    \"provider\": \"Google\",\n    \"token\": \"mock_auth_token_from_db\"\n  }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{baseUrl}}/people/adultStudents"
+					},
+					"response": []
 				}
 			],
 			"id": "1607bf37-a494-4e1f-820a-7cdc0fc7e0e6"
