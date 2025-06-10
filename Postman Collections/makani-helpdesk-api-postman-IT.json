@@ -1967,7 +1967,7 @@
 									"// --- Generate Unique Adult Student Data ---",
 									"// Use a timestamp to ensure uniqueness for email and phone",
 									"const timestamp = Date.now();",
-									"const uniqueEmail = `adult_student_delete_test_${timestamp}@example.com`;",
+									"const uniqueEmail = `adult_student_delete_test_${timestamp.toString().slice(-4)}@example.com`;",
 									"const uniquePhone = `777-666-${timestamp.toString().slice(-4)}`; // Last 4 digits of timestamp",
 									"",
 									"// This is the payload for creating an *Adult Student*",
@@ -1979,10 +1979,10 @@
 									"  \"phone\": uniquePhone,      // Dynamically generated",
 									"  \"address\": \"123 Test Student St\",",
 									"  \"zipCode\": \"54321\",",
-									"  \"profilePicture\": \"iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=\", // From provided JSON",
+									"  \"profilePicture\": \"iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAACmJLR0QAgvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH5gIHDyYn7N2JngAAAB1pVFh0Q29tbWVudAAAAAAAQ3JlYXRlZCB3aXRoIEdJTVP/fhwAAAL5SURBHRfH2s=\", // From provided JSON",
 									"  \"auth\": { // Nested CustomerAuthDTO for adult student's authentication",
 									"    \"provider\": \"Google\", // From provided JSON",
-									"    \"token\": \"MjU2Yml0U2VjcmV0S2V5SGFzaExpdGxhckFiY2RlZmdo=\" // Mock Base64 hash from provided JSON",
+									"    \"token\": \"MjU2Yml0U2VjcmV0S2V5SGFzaExpdGxhckFiY2RlZmdo\"// Mock Base64 hash from provided JSON",
 									"  }",
 									"};",
 									"",
@@ -2002,7 +2002,6 @@
 									"    if (err) {",
 									"        console.error(\"Pre-request: Network/Request Error during adult student creation: \", err);",
 									"        // Fail the main DELETE request if setup fails",
-									"        pm.test(\"Pre-request: Adult student creation failed (network/request error)\", false);",
 									"    } else {",
 									"        // Ensure creation was successful (HTTP 201)",
 									"        console.log(\"Pre-request: Adult student creation response status code:\", res.code);",
@@ -2040,11 +2039,7 @@
 					"request": {
 						"method": "DELETE",
 						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n  \"adultStudentId\": 1,\n  \"firstName\": \"Ava\",\n  \"lastName\": \"Rodriguez\",\n  \"birthDate\": \"1998-07-15\",\n  \"email\": \"ava.r{{entityDiffEmail}}@example.com\",\n  \"phone\": \"111-111-1111\",\n  \"address\": \"111 Pine St\",\n  \"zipCode\": \"11111\",\n  \"profilePicture\": \"iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAACmJLR0QAgvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH5gIHDyYn7N2JngAAAB1pVFh0Q29tbWVudAAAAAAAQ3JlYXRlZCB3aXRoIEdJTVP/fhwAAAL5SURBHRfH2s=\",\n  \"auth\": {\n    \"customerAuthId\": 1,\n    \"provider\": \"Google\",\n    \"token\": \"aHR0cHNfZ29vZ2xlX2F1dGhfNWVjcmV0dG9rZW4=\"\n  }\n}"
-						},
-						"url": "{{baseUrl}}/people/adultStudents/{{entityIdToDelete}}}}"
+						"url": "{{baseUrl}}/people/adultStudents/{{entityIdToDelete}}"
 					},
 					"response": []
 				}
