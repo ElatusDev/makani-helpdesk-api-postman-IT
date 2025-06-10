@@ -1684,6 +1684,19 @@
 			"item": [
 				{
 					"name": "CreateAdultStudentResponse201",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "964cae58-b5e4-471e-ba04-6b1f5a19a23a",
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
 					"id": "67ce3b27-a35d-4a2a-92e2-f9109a5409db",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
