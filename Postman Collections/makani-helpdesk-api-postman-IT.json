@@ -838,7 +838,7 @@
 									"",
 									"    // Optional: Assert on specific error message content for 404",
 									"    // Or if your API is very specific:",
-									"     pm.expect(responseJson.message).to.eql(\"Eliminacion de empleado no esta permitida! dicha accion corromperia los datos de la organizacion\");",
+									"     pm.expect(responseJson.message).to.eql(\"Eliminacion de Empleado no esta permitida! dicha accion corromperia los datos de la organizacion\");",
 									"});"
 								],
 								"type": "text/javascript",
@@ -1554,7 +1554,7 @@
 									"    ",
 									"    pm.expect(responseData).to.be.an('object');",
 									"    pm.expect(responseData).to.have.property('message');",
-									"    pm.expect(responseData.message).to.eql(\"Eliminacion de colaborador no esta permitida! dicha accion corromperia los datos de la organizacion\");",
+									"    pm.expect(responseData.message).to.eql(\"Eliminacion de Colaborador no esta permitida! dicha accion corromperia los datos de la organizacion\");",
 									"});",
 									"",
 									"",
