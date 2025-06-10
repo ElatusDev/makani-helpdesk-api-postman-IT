@@ -1808,7 +1808,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"firstName\": \"Ava\",\n  \"lastName\": \"Rodriguez\",\n  \"birthDate\": \"1998-07-15\",\n  \"email\": \"ava.r@example.com\",\n  \"phone\": \"111-111-{{entityDiffPhonenumber}}\",\n  \"address\": \"111 Pine St\",\n  \"zipCode\": \"11111\",\n  \"profilePicture\": null,\n  \"auth\": {\n    \"customerAuthId\": 1,\n    \"provider\": \"Google\",\n    \"token\": \"mock_auth_token_from_db\"\n  }\n}",
+							"raw": "{\n  \"firstName\": \"Ava\",\n  \"lastName\": \"Rodriguez\",\n  \"birthDate\": \"1998-07-15\",\n  \"email\": \"ava.r@example.com\",\n  \"phone\": \"111-111-{{entityDiffPhonenumber}}\",\n  \"address\": \"111 Pine St\",\n  \"zipCode\": \"11111\",\n  \"profilePicture\": null,\n  \"auth\": {\n    \"customerAuthId\": 1,\n    \"provider\": \"Google\",\n    \"token\": \"eyJzdWIiOiJtb2NrX3VzZXIiLCJuYW1lIjoiTW9ja1Rlc3QiLCJleHAiOjE3MTgyOTQ0MDAsImlhdCI6MTcxODI5MjAwMH0sMDpTNG5kMG1UMGszbkM0YzM\"\n  }\n}",
 							"options": {
 								"raw": {
 									"language": "json"
