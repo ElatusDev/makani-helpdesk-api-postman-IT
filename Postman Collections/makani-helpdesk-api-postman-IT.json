@@ -1690,6 +1690,57 @@
 							"script": {
 								"id": "964cae58-b5e4-471e-ba04-6b1f5a19a23a",
 								"exec": [
+									"pm.test(\"Response status code is 201\", function () {",
+									"    pm.expect(pm.response.code).to.eql(201);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response time is less than 200ms\", function () {",
+									"    pm.expect(pm.response.responseTime).to.be.below(200);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response has the required fields\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData).to.have.property('adultStudentId').that.is.a('number');",
+									"});",
+									"",
+									"",
+									"pm.test(\"adultStudentId is a non-negative integer\", function () {",
+									"    const responseData = pm.response.json();",
+									"    ",
+									"    pm.expect(responseData).to.be.an('object');",
+									"    pm.expect(responseData.adultStudentId).to.exist.and.to.be.a('number').and.to.be.at.least(0);",
+									"});",
+									"",
+									"",
+									"pm.test(\"Response content type is application/json\", function () {",
+									"    pm.expect(pm.response.headers.get('Content-Type')).to.equal('application/json');",
+									"});",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "90d78734-ec0f-49cf-aed9-494830c35e7e",
+								"exec": [
+									"let entityDiffEmailCurrentNumber = parseInt(pm.environment.get(\"entityDiffEmail\")); // Convert to integer",
+									"if (isNaN(entityDiffEmailCurrentNumber)) {",
+									"    console.warn(\"entityDiffEmail was not a number.\");",
+									"}",
+									"pm.environment.set(\"entityDiffEmail\", entityDiffEmailCurrentNumber + 1);",
+									"",
+									"let entityDiffPhonenumberCurrentNumber = parseInt(pm.environment.get(\"entityDiffPhonenumber\")); // Convert to integer",
+									"if (isNaN(entityDiffPhonenumberCurrentNumber)) {",
+									"    console.warn(\"entityDiffPhonenumber was not a number.\");",
+									"}",
+									"pm.environment.set(\"entityDiffPhonenumber\", entityDiffPhonenumberCurrentNumber + 1);",
 									""
 								],
 								"type": "text/javascript",
@@ -1706,7 +1757,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n  \"firstName\": \"Maria\",\n  \"lastName\": \"Gonzales\",\n  \"birthDate\": \"1998-07-20\",\n  \"email\": \"maria.gonzales@example.com\",\n  \"phone\": \"555-123-9876\",\n  \"address\": \"123 Oak Avenue\",\n  \"zipCode\": \"90210\",\n  \"profilePicture\": \"iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=\",\n  \"auth\": {\n    \"provider\": \"Google\",\n    \"token\": \"some_google_auth_token_for_adult_student\"\n  }\n}",
+							"raw": "{\n  \"firstName\": \"Maria\",\n  \"lastName\": \"Gonzales\",\n  \"birthDate\": \"1998-07-20\",\n  \"email\": \"maria.gonzales{{entityDiffEmail}}@example.com\",\n  \"phone\": \"555-123-{{entityDiffPhonenumber}}\",\n  \"address\": \"123 Oak Avenue\",\n  \"zipCode\": \"90210\",\n  \"profilePicture\": \"iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=\",\n  \"auth\": {\n    \"provider\": \"Google\",\n    \"token\": \"MjU2Yml0U2VjcmV0S2V5SGFzaExpdGxhckFiY2RlZmdo\"\n  }\n}",
 							"options": {
 								"raw": {
 									"language": "json"
