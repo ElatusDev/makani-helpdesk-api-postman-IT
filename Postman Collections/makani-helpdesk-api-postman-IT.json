@@ -2206,6 +2206,64 @@
 				},
 				{
 					"name": "GetAdultStudentByIdResponse200",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "a8f40f8c-e64c-474f-b708-0a2029cbd22b",
+								"exec": [
+									"pm.environment.set(\"entityId\", 1);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "11ba44e8-8b5b-4724-ae1f-7fe7fbbeeb46",
+								"exec": [
+									"// Post-response Tests for 'GET AdultStudent by ID - 200 OK'",
+									"",
+									"// Test 1: Verify Status Code is 200",
+									"pm.test(\"Status code is 200 OK\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"// Test 2: Verify Response is JSON",
+									"pm.test(\"Response is JSON\", function () {",
+									"    pm.response.to.be.json;",
+									"});",
+									"",
+									"// Test 3: Verify Response body matches GetAdultStudentResponseDTO structure and content",
+									"pm.test(\"Response body matches GetAdultStudentResponseDTO structure\", function () {",
+									"    const responseJson = pm.response.json();",
+									"    const requestedId = pm.environment.get(\"entityId\"); // Get the ID used in the request",
+									"",
+									"    // Basic structure and type checks for required fields",
+									"    pm.expect(responseJson).to.be.an('object', 'Response should be an object');",
+									"    pm.expect(responseJson).to.have.property('adultStudentId').and.to.be.a('number', 'adultStudentId should be a number');",
+									"    pm.expect(responseJson.adultStudentId).to.eql(parseInt(requestedId), ",
+									"                                    'Returned adultStudentId should match the requested ID');",
+									"    pm.expect(responseJson).to.have.property('firstName').and.to.be.a('string', 'firstName should be a string');",
+									"    pm.expect(responseJson).to.have.property('lastName').and.to.be.a('string', 'lastName should be a string');",
+									"    pm.expect(responseJson).to.have.property('email').and.to.be.a('string', 'email should be a string');",
+									"    pm.expect(responseJson).to.have.property('phone').and.to.be.a('string', 'phone should be a string');",
+									"    pm.expect(responseJson).to.have.property('address').and.to.be.a('string', 'address should be a string');",
+									"    pm.expect(responseJson).to.have.property('zipCode').and.to.be.a('string', 'zipCode should be a string');",
+									"    pm.expect(responseJson).to.have.property('birthDate').and.to.be.a('string', 'birthDate should be a string (YYYY-MM-DD)');",
+									"});",
+									"",
+									"pm.test(\"Response body is not a collection\", function () {",
+									"    const responseData = pm.response.json();",
+									"    pm.expect(responseData).not.to.be.an('array');",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
 					"id": "ef37116f-fce2-4726-9a94-8b19a4b86ff8",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
@@ -2214,6 +2272,75 @@
 						"method": "GET",
 						"header": [],
 						"url": "{{baseUrl}}/people/adultStudents/{{entityId}}"
+					},
+					"response": []
+				},
+				{
+					"name": "GetAdultStudentByIdResponse404",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "a8f40f8c-e64c-474f-b708-0a2029cbd22b",
+								"exec": [
+									"pm.environment.set(\"entityId\", 1000);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"id": "11ba44e8-8b5b-4724-ae1f-7fe7fbbeeb46",
+								"exec": [
+									"// Post-response Tests for 'GET Employee by ID - 404 Not Found'",
+									"",
+									"// Test 1: Verify Status Code is 404",
+									"pm.test(\"Status code is 404 Not Found\", function () {",
+									"    pm.response.to.have.status(404);",
+									"});",
+									"",
+									"// Test 2: Verify Response is JSON",
+									"pm.test(\"Response is JSON\", function () {",
+									"    pm.response.to.be.json;",
+									"});",
+									"",
+									"// Test 3: Verify Response body matches ErrorResponseDTO structure",
+									"pm.test(\"Response body matches ErrorResponseDTO structure\", function () {",
+									"    const responseJson = pm.response.json();",
+									"    const requestedId = pm.environment.get(\"entityId\"); // Get the ID used in the request",
+									"",
+									"    pm.expect(responseJson).to.be.an('object', 'Error response should be an object');",
+									"    pm.expect(responseJson).to.have.property('message').and.to.be.a('string', 'Error message should be a string');",
+									"    pm.expect(responseJson.message).to.eql(`Alumno con ID: ${requestedId} no existe!`);",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"id": "f8c00fab-5256-492e-84bd-d2f0e50fd5b2",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{baseUrl}}/people/adultStudents/{{entityId}}"
+					},
+					"response": []
+				},
+				{
+					"name": "GetAllAdultStudentsResponse200",
+					"id": "3c8a65e5-2cd4-4456-b70a-174246abd1cc",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": []
 					},
 					"response": []
 				}
