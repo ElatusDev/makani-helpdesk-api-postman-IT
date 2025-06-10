@@ -1947,6 +1947,18 @@
 						"url": "{{baseUrl}}/people/adultStudents"
 					},
 					"response": []
+				},
+				{
+					"name": "DeleteAdultStudentResponse204",
+					"id": "b208b9a3-e670-42cf-a981-22ad7b4ce93e",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
 				}
 			],
 			"id": "1607bf37-a494-4e1f-820a-7cdc0fc7e0e6"
