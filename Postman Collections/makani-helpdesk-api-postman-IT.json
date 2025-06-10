@@ -2203,6 +2203,19 @@
 						"url": "{{baseUrl}}/people/adultStudents/{{entityIdToDelete}}"
 					},
 					"response": []
+				},
+				{
+					"name": "GetAdultStudentByIdResponse200",
+					"id": "ef37116f-fce2-4726-9a94-8b19a4b86ff8",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{baseUrl}}/people/adultStudents/{{entityId}}"
+					},
+					"response": []
 				}
 			],
 			"id": "1607bf37-a494-4e1f-820a-7cdc0fc7e0e6"
