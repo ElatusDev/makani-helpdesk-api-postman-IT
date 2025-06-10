@@ -1678,14 +1678,24 @@
 			"name": "AdultStudent",
 			"item": [
 				{
-					"name": "New Request",
+					"name": "CreateAdultStudentResponse201",
 					"id": "67ce3b27-a35d-4a2a-92e2-f9109a5409db",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
 					"request": {
-						"method": "GET",
-						"header": []
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"firstName\": \"Maria\",\n  \"lastName\": \"Gonzales\",\n  \"email\": \"maria.gonzales@example.com\",\n  \"phone\": \"555-123-9876\",\n  \"address\": \"123 Oak Avenue\",\n  \"zipCode\": \"90210\",\n  \"birthDate\": \"1998-07-20\",\n  \"profilePicture\": \"iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=\",\n  \"customerAuth\": {\n    \"provider\": \"Google\",\n    \"token\": \"some_google_auth_token_string\"\n  }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{baseUrl}}/people/adultStudents"
 					},
 					"response": []
 				}
