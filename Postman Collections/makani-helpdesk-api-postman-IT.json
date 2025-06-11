@@ -2227,8 +2227,17 @@
 										"disableBodyPruning": true
 									},
 									"request": {
-										"method": "GET",
+										"method": "POST",
 										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"course_name\": \"Painting 101\",\n  \"course_description\": \"Introduction to painting techniques.\",\n  \"max_capacity\": 20\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
 										"url": "{{baseUrl}}/coordination/courses"
 									},
 									"response": []
@@ -2313,70 +2322,18 @@
 				{
 					"listen": "prerequest",
 					"script": {
-						"id": "e391d249-34ef-4c35-8123-4d8cf74b8484",
+						"id": "b056df68-1618-4b71-993b-f82548215f31",
 						"type": "text/javascript",
 						"packages": {},
 						"exec": [
-							"// --- Configuration ---",
-							"const loginRequestName = \"loginInternal\"; // Name of your login request in Postman",
-							"const validateTokenRequestName = \"Get User Info\"; // Name of a simple authenticated GET request (e.g., /user/me)",
-							"",
-							"// --- Logic ---",
-							"pm.sendRequest({",
-							"    // Make sure this URL is correct for checking token validity",
-							"    url:'http://localhost:8080/helpdesk/people/employees/1', // Example: a simple GET that requires authentication",
-							"    method: 'GET',",
-							"    header: {",
-							"        'Authorization': `Bearer ${pm.environment.get(\"authToken\")}` // FIX IS HERE: Backticks for the value string",
-							"    }",
-							"}, function (err, res) {",
-							"    if (err) {",
-							"        console.error(\"Network or request error during token validation:\", err);",
-							"        // Handle network error, try re-login",
-							"        pm.sendRequest(pm.collection.getByName(loginRequestName), function(loginErr, loginRes) { // Use pm.collection.getByName",
-							"            if (loginErr) {",
-							"                console.error(\"Error during automatic login:\", loginErr);",
-							"                pm.test(\"Automatic login failed\", false);",
-							"            } else if (loginRes.code !== 200) {",
-							"                console.error(\"Automatic login returned status:\", loginRes.code, loginRes.json());",
-							"                pm.test(\"Automatic login failed\", false);",
-							"            } else {",
-							"                console.log(\"Automatic login successful!\");",
-							"            }",
-							"        });",
-							"    } else {",
-							"        console.log(\"attempt to login...\");",
-							"        // Check if the response status indicates an invalid/expired token",
-							"        if (res.code === 401 || res.code === 403) {",
-							"            console.log(\"Token invalid or expired. Re-authenticating...\");",
-							"            // Trigger the login request",
-							"            pm.sendRequest(pm.collection.getByName(loginRequestName), function(loginErr, loginRes) { // Use pm.collection.getByName",
-							"                if (loginErr) {",
-							"                    console.error(\"Error during automatic login:\", loginErr);",
-							"                    pm.test(\"Automatic login failed\", false);",
-							"                } else if (loginRes.code !== 200) {",
-							"                    console.error(\"Automatic login returned status:\", loginRes.code, loginRes.json());",
-							"                    pm.test(\"Automatic login failed\", false);",
-							"                } else {",
-							"                    console.log(\"Automatic login successful! New token stored.\");",
-							"                }",
-							"            });",
-							"        } else if (res.code === 200) {",
-							"            console.log(\"Existing token is valid.\");",
-							"        } else {",
-							"            console.log(\"Unexpected response from validation endpoint (Status: \" + res.code + \"). Assuming token might be invalid. Attempting re-login.\");",
-							"            // Fallback to re-login if validation is inconclusive",
-							"            pm.sendRequest(pm.collection.getByName(loginRequestName)); // Use pm.collection.getByName",
-							"        }",
-							"    }",
-							"});"
+							""
 						]
 					}
 				},
 				{
 					"listen": "test",
 					"script": {
-						"id": "614ec7e0-4cd4-49c2-8cc7-82bdf05e6ed2",
+						"id": "2ada4088-b4da-40c4-af09-a6602d7a3cf5",
 						"type": "text/javascript",
 						"packages": {},
 						"exec": [
