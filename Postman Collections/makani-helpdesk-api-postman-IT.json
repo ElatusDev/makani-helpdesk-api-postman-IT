@@ -9,12 +9,49 @@
 			"name": "Authentication Workflow",
 			"item": [
 				{
-					"name": "LOGIN-INTERNAL",
+					"name": "loginInternal",
 					"event": [
 						{
 							"listen": "test",
 							"script": {
 								"id": "8dd18529-b65e-407b-ade9-1de35373c8b8",
+								"exec": [
+									"// Ensure the request was successful (HTTP Status 200 OK)",
+									"pm.test(\"Status code is 200 OK\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"// Check if the response body is JSON",
+									"pm.test(\"Response is JSON\", function () {",
+									"    pm.response.to.be.json;",
+									"});",
+									"",
+									"// Parse the JSON response",
+									"const responseData = pm.response.json();",
+									"",
+									"// Check if the 'token' property exists in the response",
+									"pm.test(\"Response has 'token' property\", function () {",
+									"    pm.expect(responseData).to.have.property('token');",
+									"});",
+									"",
+									"// Store the token in an environment variable",
+									"if (responseData && responseData.token) {",
+									"    // Set the environment variable 'authToken'",
+									"    pm.environment.set(\"authToken\", responseData.token);",
+									"    console.log(\"Authentication Token stored: \" + responseData.token.substring(0, 20) + \"...\"); // Log a snippet",
+									"} else {",
+									"    console.error(\"Could not find 'token' in the response.\");",
+									"    pm.test(\"Token was not found in response\", false); // Fail the test if token is missing",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"id": "8752094d-fe47-4090-9a5e-ed5b0a4d9791",
 								"exec": [
 									"// Ensure the request was successful (HTTP Status 200 OK)",
 									"pm.test(\"Status code is 200 OK\", function () {",
@@ -75,12 +112,12 @@
 				{
 					"listen": "prerequest",
 					"script": {
-						"id": "c74d831a-329b-402b-bbb1-bee053d8dd0e",
+						"id": "f0f9c0af-76fa-44c9-b79d-6e1ecb54787b",
 						"type": "text/javascript",
 						"packages": {},
 						"exec": [
 							"// --- Configuration ---",
-							"const loginRequestName = \"LOGIN-INTERNAL\"; // Name of your login request in Postman",
+							"const loginRequestName = \"loginInternal\"; // Name of your login request in Postman",
 							"const validateTokenRequestName = \"Get User Info\"; // Name of a simple authenticated GET request (e.g., /user/me)",
 							"",
 							"// --- Logic ---",
@@ -138,7 +175,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "2d44fa68-c277-4ae9-b986-b9ff8628322a",
+						"id": "c6709633-6dc9-4da8-8a5c-7ec0f9149226",
 						"type": "text/javascript",
 						"packages": {},
 						"exec": [
