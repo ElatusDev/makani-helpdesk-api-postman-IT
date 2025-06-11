@@ -2199,67 +2199,6 @@
 					"name": "security",
 					"item": [
 						{
-							"name": "loginInternal",
-							"event": [
-								{
-									"listen": "test",
-									"script": {
-										"id": "8dd18529-b65e-407b-ade9-1de35373c8b8",
-										"exec": [
-											"// Ensure the request was successful (HTTP Status 200 OK)",
-											"pm.test(\"Status code is 200 OK\", function () {",
-											"    pm.response.to.have.status(200);",
-											"});",
-											"",
-											"// Check if the response body is JSON",
-											"pm.test(\"Response is JSON\", function () {",
-											"    pm.response.to.be.json;",
-											"});",
-											"",
-											"// Parse the JSON response",
-											"const responseData = pm.response.json();",
-											"",
-											"// Check if the 'token' property exists in the response",
-											"pm.test(\"Response has 'token' property\", function () {",
-											"    pm.expect(responseData).to.have.property('token');",
-											"});",
-											"",
-											"// Store the token in an environment variable",
-											"if (responseData && responseData.token) {",
-											"    // Set the environment variable 'authToken'",
-											"    pm.environment.set(\"authToken\", responseData.token);",
-											"    console.log(\"Authentication Token stored: \" + responseData.token.substring(0, 20) + \"...\"); // Log a snippet",
-											"} else {",
-											"    console.error(\"Could not find 'token' in the response.\");",
-											"    pm.test(\"Token was not found in response\", false); // Fail the test if token is missing",
-											"}"
-										],
-										"type": "text/javascript",
-										"packages": {}
-									}
-								}
-							],
-							"id": "9c5f958e-6806-4143-b1d5-af8820618fba",
-							"protocolProfileBehavior": {
-								"disableBodyPruning": true
-							},
-							"request": {
-								"method": "POST",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\n    \"username\": \"user1\",\n    \"password\": \"pass1\"\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": "http://localhost:8080/helpdesk/security/login/internal"
-							},
-							"response": []
-						},
-						{
 							"name": "check endpoints",
 							"id": "6d2df5fb-dd28-4044-bbe2-58f107bcd40a",
 							"protocolProfileBehavior": {
@@ -2274,6 +2213,92 @@
 						}
 					],
 					"id": "ad54926e-dd3d-4628-8504-483cd34c60d2"
+				},
+				{
+					"name": "Coordination",
+					"item": [
+						{
+							"name": "Course",
+							"item": [
+								{
+									"name": "CreateCourseResponse201",
+									"id": "95998b53-f667-48cb-97af-6e04376a553d",
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": "{{baseUrl}}/coordination/courses"
+									},
+									"response": []
+								}
+							],
+							"id": "dcb2bec3-9804-4e12-bae1-b38846a27ef1"
+						}
+					],
+					"id": "3c1bed4e-ae9b-478f-9985-f5c96bead0b7"
+				},
+				{
+					"name": "loginInternal",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "8dd18529-b65e-407b-ade9-1de35373c8b8",
+								"exec": [
+									"// Ensure the request was successful (HTTP Status 200 OK)",
+									"pm.test(\"Status code is 200 OK\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"// Check if the response body is JSON",
+									"pm.test(\"Response is JSON\", function () {",
+									"    pm.response.to.be.json;",
+									"});",
+									"",
+									"// Parse the JSON response",
+									"const responseData = pm.response.json();",
+									"",
+									"// Check if the 'token' property exists in the response",
+									"pm.test(\"Response has 'token' property\", function () {",
+									"    pm.expect(responseData).to.have.property('token');",
+									"});",
+									"",
+									"// Store the token in an environment variable",
+									"if (responseData && responseData.token) {",
+									"    // Set the environment variable 'authToken'",
+									"    pm.environment.set(\"authToken\", responseData.token);",
+									"    console.log(\"Authentication Token stored: \" + responseData.token.substring(0, 20) + \"...\"); // Log a snippet",
+									"} else {",
+									"    console.error(\"Could not find 'token' in the response.\");",
+									"    pm.test(\"Token was not found in response\", false); // Fail the test if token is missing",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"id": "9c5f958e-6806-4143-b1d5-af8820618fba",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\": \"user1\",\n    \"password\": \"pass1\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "http://localhost:8080/helpdesk/security/login/internal"
+					},
+					"response": []
 				}
 			],
 			"id": "9fa54deb-1708-411b-a188-ed4a2eeabfb9",
@@ -2365,70 +2390,18 @@
 		{
 			"listen": "prerequest",
 			"script": {
-				"id": "870a0b0d-d319-43e8-a56c-d95efcc5ac0e",
+				"id": "fb7eaf3e-3abc-40a9-afb7-51450474db25",
 				"type": "text/javascript",
 				"packages": {},
 				"exec": [
-					"// --- Configuration ---",
-					"const loginRequestName = \"loginInternal\"; // Name of your login request in Postman",
-					"const validateTokenRequestName = \"Get User Info\"; // Name of a simple authenticated GET request (e.g., /user/me)",
-					"",
-					"// --- Logic ---",
-					"pm.sendRequest({",
-					"    // Make sure this URL is correct for checking token validity",
-					"    url:'http://localhost:8080/helpdesk/people/employees/1', // Example: a simple GET that requires authentication",
-					"    method: 'GET',",
-					"    header: {",
-					"        'Authorization': `Bearer ${pm.environment.get(\"authToken\")}` // FIX IS HERE: Backticks for the value string",
-					"    }",
-					"}, function (err, res) {",
-					"    if (err) {",
-					"        console.error(\"Network or request error during token validation:\", err);",
-					"        // Handle network error, try re-login",
-					"        pm.sendRequest(pm.collection.getByName(loginRequestName), function(loginErr, loginRes) { // Use pm.collection.getByName",
-					"            if (loginErr) {",
-					"                console.error(\"Error during automatic login:\", loginErr);",
-					"                pm.test(\"Automatic login failed\", false);",
-					"            } else if (loginRes.code !== 200) {",
-					"                console.error(\"Automatic login returned status:\", loginRes.code, loginRes.json());",
-					"                pm.test(\"Automatic login failed\", false);",
-					"            } else {",
-					"                console.log(\"Automatic login successful!\");",
-					"            }",
-					"        });",
-					"    } else {",
-					"        console.log(\"attempt to login...\");",
-					"        // Check if the response status indicates an invalid/expired token",
-					"        if (res.code === 401 || res.code === 403) {",
-					"            console.log(\"Token invalid or expired. Re-authenticating...\");",
-					"            // Trigger the login request",
-					"            pm.sendRequest(pm.collection.getByName(loginRequestName), function(loginErr, loginRes) { // Use pm.collection.getByName",
-					"                if (loginErr) {",
-					"                    console.error(\"Error during automatic login:\", loginErr);",
-					"                    pm.test(\"Automatic login failed\", false);",
-					"                } else if (loginRes.code !== 200) {",
-					"                    console.error(\"Automatic login returned status:\", loginRes.code, loginRes.json());",
-					"                    pm.test(\"Automatic login failed\", false);",
-					"                } else {",
-					"                    console.log(\"Automatic login successful! New token stored.\");",
-					"                }",
-					"            });",
-					"        } else if (res.code === 200) {",
-					"            console.log(\"Existing token is valid.\");",
-					"        } else {",
-					"            console.log(\"Unexpected response from validation endpoint (Status: \" + res.code + \"). Assuming token might be invalid. Attempting re-login.\");",
-					"            // Fallback to re-login if validation is inconclusive",
-					"            pm.sendRequest(pm.collection.getByName(loginRequestName)); // Use pm.collection.getByName",
-					"        }",
-					"    }",
-					"});"
+					""
 				]
 			}
 		},
 		{
 			"listen": "test",
 			"script": {
-				"id": "dd084251-bce1-459c-a18f-72660f7ad743",
+				"id": "418d7d10-091a-40a1-83ae-5d553515ad0d",
 				"type": "text/javascript",
 				"packages": {},
 				"exec": [
