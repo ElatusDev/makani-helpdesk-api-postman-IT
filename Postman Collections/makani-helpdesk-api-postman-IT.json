@@ -2428,7 +2428,8 @@
 													"",
 													"pm.test(\"Response body contains the expected message\", function () {",
 													"    const responseData = pm.response.json();",
-													"    pm.expect(responseData.message).to.be.eql(\"El horario del curso conflictua con uno o mas cursos existentes: Creative Writing\");",
+													"    const schedule = pm.environment.get(\"schedule\");",
+													"    pm.expect(responseData.message).to.be.eql(`El horario con ID: ${schedule} no existe!`);",
 													"});"
 												],
 												"type": "text/javascript",
@@ -2440,7 +2441,7 @@
 											"script": {
 												"id": "8dd5674a-6e6d-4a8f-a421-18ed5c94c7dd",
 												"exec": [
-													"pm.environment.set(\"schedule\", 5); // Set the schedule to an occupied one"
+													"pm.environment.set(\"schedule\", 0); // Set the schedule to an occupied one"
 												],
 												"type": "text/javascript",
 												"packages": {}
