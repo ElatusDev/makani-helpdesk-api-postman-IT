@@ -2231,7 +2231,7 @@
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n  \"course_name\": \"Painting 101\",\n  \"course_description\": \"Introduction to painting techniques.\",\n  \"max_capacity\": 20\n}",
+											"raw": "{\n  \"name\": \"Advanced Sculpture\",\n  \"description\": \"Exploration of modern sculpture techniques and materials.\",\n  \"maxCapacity\": 15,\n  \"timeTableIds\": [1, 5, 8],\n  \"availableInstructorIds\": [2, 7]\n}",
 											"options": {
 												"raw": {
 													"language": "json"
