@@ -2449,7 +2449,7 @@
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n  \"name\": \"Advanced Sculpture\",\n  \"description\": \"Exploration of modern sculpture techniques and materials.\",\n  \"maxCapacity\": 15,\n  \"timeTableIds\": [1, 2, 8],\n  \"availableInstructorIds\": [{{collaborator}}, 7]\n}",
+											"raw": "{\n  \"name\": \"Advanced Sculpture\",\n  \"description\": \"Exploration of modern sculpture techniques and materials.\",\n  \"maxCapacity\": 15,\n  \"timeTableIds\": [1, 2, 8],\n  \"availableCollaboratorIds\": [{{collaborator}}, 7]\n}",
 											"options": {
 												"raw": {
 													"language": "json"
