@@ -2425,7 +2425,12 @@
 													"    pm.expect(responseData).to.be.an('object');",
 													"    pm.expect(responseData).to.have.property('message').that.is.a('string');",
 													"});",
-													""
+													"",
+													"pm.test(\"The message field contains the expected error message\", function () {",
+													"    const responseData = pm.response.json();",
+													"    pm.expect(responseData.message).to.be.eql(\"El curso a registrar tiene un colaborador asignado con ID: {{colaborador}}, no existente!\")",
+													"    ",
+													"});"
 												],
 												"type": "text/javascript",
 												"packages": {}
@@ -2436,7 +2441,7 @@
 											"script": {
 												"id": "8dd5674a-6e6d-4a8f-a421-18ed5c94c7dd",
 												"exec": [
-													"pm.environment.set(\"schedule\", 5); // Set the schedule to an occupied one",
+													"pm.environment.set(\"schedule\", 1); // Set the schedule to an occupied one",
 													"pm.environment.set(\"collaborator\", 0); // Set the collaborator to a non existing one"
 												],
 												"type": "text/javascript",
