@@ -2219,33 +2219,46 @@
 									"script": {
 										"id": "8dd18529-b65e-407b-ade9-1de35373c8b8",
 										"exec": [
-											"// Ensure the request was successful (HTTP Status 200 OK)",
-											"pm.test(\"Status code is 200 OK\", function () {",
-											"    pm.response.to.have.status(200);",
+											"pm.test(\"Response status code is 400\", function () {",
+											"    pm.expect(pm.response.code).to.eql(400);",
 											"});",
 											"",
-											"// Check if the response body is JSON",
-											"pm.test(\"Response is JSON\", function () {",
-											"    pm.response.to.be.json;",
+											"",
+											"pm.test(\"Response contains a message field\", function () {",
+											"    const responseData = pm.response.json();",
+											"    ",
+											"    pm.expect(responseData).to.be.an('object');",
+											"    pm.expect(responseData).to.have.property('message');",
 											"});",
 											"",
-											"// Parse the JSON response",
-											"const responseData = pm.response.json();",
 											"",
-											"// Check if the 'token' property exists in the response",
-											"pm.test(\"Response has 'token' property\", function () {",
-											"    pm.expect(responseData).to.have.property('token');",
+											"pm.test(\"Message is a non-empty string\", function () {",
+											"    const responseData = pm.response.json();",
+											"    ",
+											"    pm.expect(responseData).to.be.an('object');",
+											"    pm.expect(responseData.message).to.exist.and.to.be.a('string').and.to.have.lengthOf.at.least(1, \"Message should not be empty\");",
 											"});",
 											"",
-											"// Store the token in an environment variable",
-											"if (responseData && responseData.token) {",
-											"    // Set the environment variable 'authToken'",
-											"    pm.environment.set(\"authToken\", responseData.token);",
-											"    console.log(\"Authentication Token stored: \" + responseData.token.substring(0, 20) + \"...\"); // Log a snippet",
-											"} else {",
-											"    console.error(\"Could not find 'token' in the response.\");",
-											"    pm.test(\"Token was not found in response\", false); // Fail the test if token is missing",
-											"}"
+											"",
+											"pm.test(\"Response time is less than 200ms\", function () {",
+											"    pm.expect(pm.response.responseTime).to.be.below(200);",
+											"});",
+											"",
+											"",
+											"pm.test(\"Response matches the expected schema format\", function () {",
+											"    const responseData = pm.response.json();",
+											"",
+											"    pm.expect(responseData).to.be.an('object');",
+											"    pm.expect(responseData).to.have.all.keys('message');",
+											"    pm.expect(responseData.message).to.be.a('string');",
+											"});",
+											"",
+											"pm.test(\"response message should match expected\", function(){",
+											"    const responseData = pm.response.json();",
+											"    const expectedMessage = \"nombre de usuario o contraseña no son validos\";",
+											"    pm.expect(responseData.message).to.eql(expectedMessage);",
+											"});",
+											""
 										],
 										"type": "text/javascript",
 										"packages": {}
@@ -2254,8 +2267,12 @@
 								{
 									"listen": "prerequest",
 									"script": {
-										"packages": {},
-										"type": "text/javascript"
+										"id": "b0d75462-41a1-4d0c-92fa-f08ca63353ad",
+										"exec": [
+											""
+										],
+										"type": "text/javascript",
+										"packages": {}
 									}
 								}
 							],
@@ -2268,7 +2285,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n    \"username\": \"user1\",\n    \"password\": \"pass1\"\n}",
+									"raw": "{\n    \"username\": \"user11111111\",\n    \"password\": \"pass11111111\"\n}",
 									"options": {
 										"raw": {
 											"language": "json"
