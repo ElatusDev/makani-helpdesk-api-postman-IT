@@ -2432,7 +2432,8 @@
 											"script": {
 												"id": "8dd5674a-6e6d-4a8f-a421-18ed5c94c7dd",
 												"exec": [
-													"pm.environment.set(\"schedule\", 5); // Set the schedule to an occupied one"
+													"pm.environment.set(\"schedule\", 5); // Set the schedule to an occupied one",
+													"pm.environment.set(\"collaborator\", 0); // Set the collaborator to a non existing one"
 												],
 												"type": "text/javascript",
 												"packages": {}
@@ -2448,7 +2449,7 @@
 										"header": [],
 										"body": {
 											"mode": "raw",
-											"raw": "{\n  \"name\": \"Advanced Sculpture\",\n  \"description\": \"Exploration of modern sculpture techniques and materials.\",\n  \"maxCapacity\": 15,\n  \"timeTableIds\": [1, {{schedule}}, 8],\n  \"availableInstructorIds\": [2, 7]\n}",
+											"raw": "{\n  \"name\": \"Advanced Sculpture\",\n  \"description\": \"Exploration of modern sculpture techniques and materials.\",\n  \"maxCapacity\": 15,\n  \"timeTableIds\": [1, 2, 8],\n  \"availableInstructorIds\": [{{collaborator}}, 7]\n}",
 											"options": {
 												"raw": {
 													"language": "json"
