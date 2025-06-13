@@ -2306,7 +2306,7 @@
 							"name": "Course",
 							"item": [
 								{
-									"name": "CreateCourseResponse400",
+									"name": "CreateCourseResponse400ScheduleConflict",
 									"event": [
 										{
 											"listen": "test",
