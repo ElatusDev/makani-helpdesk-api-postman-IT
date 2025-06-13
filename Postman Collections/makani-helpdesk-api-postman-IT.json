@@ -2428,8 +2428,8 @@
 													"",
 													"pm.test(\"The message field contains the expected error message\", function () {",
 													"    const responseData = pm.response.json();",
-													"    pm.expect(responseData.message).to.be.eql(\"El curso a registrar tiene un colaborador asignado con ID: {{colaborador}}, no existente!\")",
-													"    ",
+													"    const collaborador = pm.environment.get(\"collaborator\");",
+													"    pm.expect(responseData.message).to.be.eql(`El curso a registrar tiene un colaborador asignado con ID: ${collaborador}, no existente!`);",
 													"});"
 												],
 												"type": "text/javascript",
