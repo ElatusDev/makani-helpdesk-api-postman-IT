@@ -2387,6 +2387,87 @@
 									"response": []
 								},
 								{
+									"name": "CreateCourseResponse400ScheduleNotFound",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"id": "e2587195-8bac-4bc2-89ea-4e1707117ae6",
+												"exec": [
+													"pm.test(\"Response status code is 400\", function () {",
+													"    pm.expect(pm.response.code).to.equal(400);",
+													"});",
+													"",
+													"",
+													"pm.test(\"Response time is less than 200ms\", function () {",
+													"    pm.expect(pm.response.responseTime).to.be.below(200);",
+													"});",
+													"",
+													"",
+													"pm.test(\"Response has a message field\", function () {",
+													"    const responseData = pm.response.json();",
+													"    ",
+													"    pm.expect(responseData).to.be.an('object').that.has.property('message');",
+													"});",
+													"",
+													"",
+													"pm.test(\"The message field must be a non-empty string\", function () {",
+													"    const responseData = pm.response.json();",
+													"    ",
+													"    pm.expect(responseData).to.be.an('object');",
+													"    pm.expect(responseData.message).to.exist.and.to.be.a('string').and.to.have.lengthOf.at.least(1, \"Value should not be empty\");",
+													"});",
+													"",
+													"",
+													"pm.test(\"Response conforms to the expected schema\", function () {",
+													"    const responseData = pm.response.json();",
+													"    ",
+													"    pm.expect(responseData).to.be.an('object');",
+													"    pm.expect(responseData).to.have.property('message').that.is.a('string');",
+													"});",
+													"",
+													"pm.test(\"Response body contains the expected message\", function () {",
+													"    const responseData = pm.response.json();",
+													"    pm.expect(responseData.message).to.be.eql(\"El horario del curso conflictua con uno o mas cursos existentes: Creative Writing\");",
+													"});"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"id": "8dd5674a-6e6d-4a8f-a421-18ed5c94c7dd",
+												"exec": [
+													"pm.environment.set(\"schedule\", 5); // Set the schedule to an occupied one"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"id": "76f937c9-73d3-4b46-ad93-943759527c16",
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"name\": \"Advanced Sculpture\",\n  \"description\": \"Exploration of modern sculpture techniques and materials.\",\n  \"maxCapacity\": 15,\n  \"timeTableIds\": [1, {{schedule}}, 8],\n  \"availableInstructorIds\": [2, 7]\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": "{{baseUrl}}/coordination/courses"
+									},
+									"response": []
+								},
+								{
 									"name": "CreateCourseResponse400CollaboratorNotFound",
 									"event": [
 										{
