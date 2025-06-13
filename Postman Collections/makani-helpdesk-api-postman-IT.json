@@ -2344,7 +2344,11 @@
 													"    pm.expect(responseData).to.be.an('object');",
 													"    pm.expect(responseData).to.have.property('message').that.is.a('string');",
 													"});",
-													""
+													"",
+													"pm.test(\"Response body contains the expected message\", function () {",
+													"    const responseData = pm.response.json();",
+													"    pm.expect(responseData.message).to.be.eql(\"El horario del curso conflictua con uno o mas cursos existentes: Creative Writing\");",
+													"});"
 												],
 												"type": "text/javascript",
 												"packages": {}
