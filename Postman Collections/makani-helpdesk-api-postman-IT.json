@@ -2550,6 +2550,89 @@
 										"url": "{{baseUrl}}/coordination/courses"
 									},
 									"response": []
+								},
+								{
+									"name": "CreateCourseResponse200",
+									"event": [
+										{
+											"listen": "test",
+											"script": {
+												"id": "e2587195-8bac-4bc2-89ea-4e1707117ae6",
+												"exec": [
+													"pm.test(\"Response status code is 400\", function () {",
+													"    pm.expect(pm.response.code).to.equal(400);",
+													"});",
+													"",
+													"",
+													"pm.test(\"Response time is less than 200ms\", function () {",
+													"    pm.expect(pm.response.responseTime).to.be.below(200);",
+													"});",
+													"",
+													"",
+													"pm.test(\"Response has a message field\", function () {",
+													"    const responseData = pm.response.json();",
+													"    ",
+													"    pm.expect(responseData).to.be.an('object').that.has.property('message');",
+													"});",
+													"",
+													"",
+													"pm.test(\"The message field must be a non-empty string\", function () {",
+													"    const responseData = pm.response.json();",
+													"    ",
+													"    pm.expect(responseData).to.be.an('object');",
+													"    pm.expect(responseData.message).to.exist.and.to.be.a('string').and.to.have.lengthOf.at.least(1, \"Value should not be empty\");",
+													"});",
+													"",
+													"",
+													"pm.test(\"Response conforms to the expected schema\", function () {",
+													"    const responseData = pm.response.json();",
+													"    ",
+													"    pm.expect(responseData).to.be.an('object');",
+													"    pm.expect(responseData).to.have.property('message').that.is.a('string');",
+													"});",
+													"",
+													"pm.test(\"The message field contains the expected error message\", function () {",
+													"    const responseData = pm.response.json();",
+													"    const collaborador = pm.environment.get(\"collaborator\");",
+													"    pm.expect(responseData.message).to.be.eql(`El curso a registrar tiene un colaborador asignado con ID: ${collaborador}, no existente!`);",
+													"});"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										},
+										{
+											"listen": "prerequest",
+											"script": {
+												"id": "8dd5674a-6e6d-4a8f-a421-18ed5c94c7dd",
+												"exec": [
+													"pm.environment.set(\"schedule\", 1); // Set the schedule to an occupied one",
+													"pm.environment.set(\"collaborator\", 0); // Set the collaborator to a non existing one"
+												],
+												"type": "text/javascript",
+												"packages": {}
+											}
+										}
+									],
+									"id": "cbf54584-23e2-4084-ae74-f8b646f3e1ec",
+									"protocolProfileBehavior": {
+										"disableBodyPruning": true
+									},
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n  \"name\": \"Advanced Sculpture\",\n  \"description\": \"Exploration of modern sculpture techniques and materials.\",\n  \"maxCapacity\": 15,\n  \"timeTableIds\": [1, 2, 8],\n  \"availableCollaboratorIds\": [2, 7]\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": "{{baseUrl}}/coordination/courses"
+									},
+									"response": []
 								}
 							],
 							"id": "dcb2bec3-9804-4e12-bae1-b38846a27ef1"
@@ -2631,7 +2714,7 @@
 				{
 					"listen": "prerequest",
 					"script": {
-						"id": "f9dac637-0d41-4ac8-b293-468f557a6d35",
+						"id": "cd119c50-40a7-4831-906b-90e3436f9f65",
 						"type": "text/javascript",
 						"packages": {},
 						"exec": [
@@ -2694,7 +2777,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "7afae47c-c455-4b02-90bf-026bbf508788",
+						"id": "22c0be4f-bb42-4e34-932b-2a3080da0680",
 						"type": "text/javascript",
 						"packages": {},
 						"exec": [
