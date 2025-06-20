@@ -2714,13 +2714,13 @@
 				{
 					"listen": "prerequest",
 					"script": {
-						"id": "cd119c50-40a7-4831-906b-90e3436f9f65",
+						"id": "87b4ca79-fc1a-4543-bac2-2e38036af70f",
 						"type": "text/javascript",
 						"packages": {},
 						"exec": [
 							"// --- Configuration ---",
-							"const loginRequestName = \"loginInternal\"; // Name of your login request in Postman",
-							"const validateTokenRequestName = \"Get User Info\"; // Name of a simple authenticated GET request (e.g., /user/me)",
+							"const loginRequestName = \"loginInternalResponse200\"; // Name of your login request in Postman",
+							"const validateTokenRequestName = \"GetEmployeeByIdResponse200\"; // Name of a simple authenticated GET request (e.g., /user/me)",
 							"",
 							"// --- Logic ---",
 							"pm.sendRequest({",
@@ -2777,7 +2777,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "22c0be4f-bb42-4e34-932b-2a3080da0680",
+						"id": "5779506d-9555-4898-a14d-c99316954dcc",
 						"type": "text/javascript",
 						"packages": {},
 						"exec": [
